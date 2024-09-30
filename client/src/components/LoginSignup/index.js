@@ -1,22 +1,36 @@
-import { useState } from 'react'
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import classNames from "classnames/bind";
 import styles from './LoginSignup.module.scss'
 import Input from "../Input";
 const cx = classNames.bind(styles)
 function LoginSigup() {
-    // const [name, setName] = useState('');
-    // const [erorName, setErrorName] = useState('');
-    const [value, setValue] = useState({
-        username: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
-    })
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log(value)
-    }
+    const validationSchema = Yup.object({
+        name: Yup.string()
+          .required('Tên là bắt buộc')
+          .min(2, 'Tên phải có ít nhất 2 ký tự'),
+        email: Yup.string()
+          .required('Email là bắt buộc')
+          .email('Email không hợp lệ'),
+        password: Yup.string()
+          .required('Mật khẩu là bắt buộc')
+          .min(6, 'Mật khẩu phải có ít nhất 6 ký tự'),
+      });
+
+    const formik = useFormik({
+        initialValues:{
+            username: '',
+            email: '',
+            password: '',
+            password_confirmation: '',
+        },
+        validationSchema: validationSchema,
+        onSubmit: (value)=>{
+            console.log(value)
+        }
+    })
+    console.log(formik.setErrors)
     return (<div className={cx('wrapper')}>
 
         {/* <div className="block__intro">
@@ -55,26 +69,26 @@ function LoginSigup() {
         </div> */}
 
         <div className={cx("signup-container")}>
-            <form action="" className={cx("signup")} onSubmit={handleSubmit}>
+            <form action="" className={cx("signup")} onSubmit={formik.handleSubmit}>
                 <i className={`fa-solid fa-xmark ${cx('xmark')}`}></i>
                 <h2 className={cx("signup-title")}>CREATE AN ACCOUNT </h2>
                 <div className={cx('demo')}>
-                    <Input className={cx("signup-control")} type="text" id="username" name="username" placeholder="Username" value={value.name} setValue={setValue} />
+                    <Input className={cx("signup-control")} type="text" id="username" name="username" placeholder="Username" value={formik.values.username} setValue={formik.handleChange} />
                     {/* <Input className={cx("signup-control")} type="text" id="username" name="username" placeholder="Username" error='Vui lòng nhập tên' /> */}
                 </div>
                 <div className={cx('demo')}>
-                    <Input className={cx("signup-control")} type="text" id="email" name="email" placeholder="Email" autoComplete="username" />
+                    <Input className={cx("signup-control")} type="text" id="email" name="email" placeholder="Email" autoComplete="username" value={formik.values.email} setValue={formik.handleChange}/>
                     {/* <Input className={cx("signup-control")} type="text" id="email" name="email" placeholder="Email" error='Vui lòng nhập email' /> */}
                 </div>
                 <div className={cx('demo')}>
-                    <Input className={cx("signup-control")} type="password" id="password" name="password" placeholder="Password" autoComplete="new-password" />
+                    <Input className={cx("signup-control")} type="password" id="password" name="password" placeholder="Password" autoComplete="new-password" value={formik.values.password} setValue={formik.handleChange}/>
                     {/* <Input className={cx("signup-control")} type="password" id="password" name="password" placeholder="Password" error='Vui lòng nhập mật khẩu' /> */}
                 </div>
                 <div className={cx('demo')}>
-                    <Input className={cx("signup-control")} type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password" autoComplete="new-password" />
+                    <Input className={cx("signup-control")} type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password" autoComplete="new-password" value={formik.values.password_confirmation} setValue={formik.handleChange}/>
                     {/* <Input className={cx("signup-control")} type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password" error='Vui lòng nhập lại mật khẩu' /> */}
                 </div>
-                <button className={cx("signup-submit")}>Register</button>
+                <button className={cx("signup-submit")} type='submit'>Register</button>
             </form>
         </div>
     </div>);
