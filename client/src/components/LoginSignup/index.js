@@ -42,10 +42,10 @@ function LoginSigup() {
     return (<div className={cx('wrapper')}>
 
         <div className="block__intro">
-            <div className="block__messege">WELCOME TO WEBSITE</div>
-            <div className="block__description">
-                <h1>
-                    Dịch vụ cho phép lưu trữ quản lí ảnh
+            <div className="block__messege">  <h1 style={{ color: 'black' }}>WELCOME TO WEBSITE</h1></div>
+            <div className={cx('block__description')}>
+                <h1 style={{ color: 'white' }}>
+                    SHOTBOX
                 </h1>
             </div>
         </div>

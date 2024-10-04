@@ -19,7 +19,7 @@ function Camera() {
                 videoConstraints={videoConstraints}
             >
                 {({ getScreenshot }) => (
-                    <div className={cx('new-demo')}>
+                    <div className={cx('action-get-img')}>
                         <Button
                             first
                             onClick={() => {
@@ -34,7 +34,7 @@ function Camera() {
             </Webcam>
         }
 
-        <div className={cx('demo')}>
+        <div className={cx('action')}>
             <Button first onClick={() => { setShowCamera(!showCamera) }}>{showCamera ? 'Hide Camera' : 'Show Camera'}</Button>
         </div>
     </div >);

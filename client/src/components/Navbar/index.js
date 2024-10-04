@@ -32,7 +32,7 @@ function NavBar({ mainLayout, defaultLayout, href, children }) {
         }
 
         {defaultLayout &&
-            <div className={cx('fix-login')}>
+            <div className={cx('fix-toolbar')}>
                 <div className={cx('actions')} >
                     <Button second onClick={handleOnclick}>UPLOAD</Button>
                 </div >
