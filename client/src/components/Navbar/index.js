@@ -1,19 +1,20 @@
-import styles from './Navbar.module.scss'
-import classnames from 'classnames/bind'
-import { Link } from 'react-router-dom'
-import Button from '../Button'
-import React, { useRef } from 'react';
-// import Input from '../Input'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import classnames from 'classnames/bind'
+import { useDispatch } from 'react-redux'
+import Button from '../Button'
+import { showUpload } from '../../actions/upload'
+import styles from './Navbar.module.scss'
 const cx = classnames.bind(styles)
 function NavBar({ mainLayout, defaultLayout, href, children }) {
     const [showMenuItems, setShowMenuItems] = useState(false)
-    const [showFormUpload, setShowFormUpload] = useState(false)
-    const fileInputRef = useRef(null);
 
-    const handleSelectFromDevice = () => {
-        fileInputRef.current.click();
-    };
+    const dispatch = useDispatch();
+
+    const handleOnclick = (e)=>{
+        const action = showUpload(true);
+        dispatch(action)
+    }
 
     const props = {
         to: href,
@@ -26,17 +27,14 @@ function NavBar({ mainLayout, defaultLayout, href, children }) {
 
         {mainLayout &&
             <div className={cx('actions')} >
-                <Button first to='account'>Log In</Button>
+                <Button first to='/account'>Log In</Button>
             </div >
         }
 
-
-
         {defaultLayout &&
             <div className={cx('fix-login')}>
-
                 <div className={cx('actions')} >
-                    <Button second onClick={() => { setShowFormUpload(true) }}>UPLOAD</Button>
+                    <Button second onClick={handleOnclick}>UPLOAD</Button>
                 </div >
 
                 <div className={cx('actions')} >
@@ -58,24 +56,8 @@ function NavBar({ mainLayout, defaultLayout, href, children }) {
                     </Button>
                 </div >
 
-                {showFormUpload &&
-                    <div className={cx('upload')}>
-                        <Button five>use-url</Button>
-                        <Button five onClick={handleSelectFromDevice}>select-from-device</Button>
-                        <div className={cx('upload-container')}>
-                            <div className={cx('frame')}>
-                                <input type="text" style={{ flex: 1, fontSize: '16px', height: '27px', outline: 'none' }} />
-                                <Button five>upload</Button>
-                            </div>
-                        </div>
-                        <input type="file" ref={fileInputRef} style={{ display: 'none' }} />
-                        <i className={`fa-regular fa-circle-xmark ${cx('circle-xmark')}`} onClick={() => setShowFormUpload(false)}></i>
-                    </div>
-                }
-
             </div>
         }
-
 
     </div >
 }
