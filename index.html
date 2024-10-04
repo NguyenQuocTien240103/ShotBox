@@ -1,16 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
-    <button onclick='handle()'>ok</button>    
+    <button onclick='handle()'>ok</button>
 </body>
-    <script>
-        const handle = (e) =>{
-            console.log('a')
+<script>
+    var name = 'NguyenQuocTien';
+    var arr = name.split('');
+    const newArr = arr.map((value) => {
+        let char = value.charCodeAt(0);
+        if (char >= 97 && char <= 122) {
+            return String.fromCharCode(char - 32);
         }
-    </script>
+        else if (char >= 65 && char <= 90) {
+            return String.fromCharCode(char + 32);
+        }
+        else {
+            return value;
+        }
+
+    })
+    console.log(newArr.join(''))
+
+</script>
+
 </html>

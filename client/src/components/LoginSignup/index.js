@@ -10,29 +10,29 @@ import Signup from '../Signup';
 import { useState } from 'react';
 const cx = classNames.bind(styles)
 function LoginSigup() {
-    const [showFormSignup,setShowFormSignup] = useState(false);
+    const [showFormSignup, setShowFormSignup] = useState(false);
 
     const validationSchema = Yup.object({
         username: Yup.string()
-          .required('Required')
-          .min(5, 'Must be less 5 characters'),
+            .required('Required')
+            .min(5, 'Must be less 5 characters'),
         password: Yup.string()
-          .required('Required')
-          .min(6, 'Must be less 5 characters'),
-      });
+            .required('Required')
+            .min(5, 'Must be less 5 characters'),
+    });
 
     const formik = useFormik({
-        initialValues:{
+        initialValues: {
             username: '',
             password: '',
         },
         validationSchema: validationSchema,
-        onSubmit: (value)=>{
+        onSubmit: (value) => {
             console.log(value)
         }
     })
 
-    const handleOnclick = (e) =>{
+    const handleOnclick = (e) => {
         // formik.resetForm();
         setShowFormSignup(true)
     }
@@ -47,7 +47,7 @@ function LoginSigup() {
                 <h1>
                     Dịch vụ cho phép lưu trữ quản lí ảnh
                 </h1>
-            </div> 
+            </div>
         </div>
 
         <div className="login-container">
@@ -55,16 +55,16 @@ function LoginSigup() {
 
                 <h2 className={cx("login-title")}>LOG IN</h2>
                 <div className={cx('group-control')}>
-                    <Input className={cx("login-control")} 
-                    id="username" 
-                    name="username" 
-                    type="text" 
-                    placeholder="Username" 
-                    value={formik.values.username}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
+                    <Input className={cx("login-control")}
+                        id="username"
+                        name="username"
+                        type="text"
+                        placeholder="Username"
+                        value={formik.values.username}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                     />
-                    {formik.errors.username && formik.touched.username ? 
+                    {formik.errors.username && formik.touched.username ?
                         <Tippy content={formik.errors.username} placement={'bottom'}>
                             <i className={`fa-solid fa-circle-exclamation ${cx('exclamation-mark')}`}></i>
                         </Tippy> : null
@@ -72,18 +72,18 @@ function LoginSigup() {
                 </div>
 
                 <div className={cx('group-control')}>
-                    <Input className={cx("login-control")} 
-                    id="password" 
-                    name="password" 
-                    type="password" 
-                    placeholder="Password" 
-                    value={formik.values.password}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
+                    <Input className={cx("login-control")}
+                        id="password"
+                        name="password"
+                        type="password"
+                        placeholder="Password"
+                        value={formik.values.password}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                     />
                     {formik.errors.password && formik.touched.password ?
-                        <Tippy content={formik.errors.password}   placement={'bottom'}>
-                             <i className={`fa-solid fa-circle-exclamation ${cx('exclamation-mark')}`}></i>
+                        <Tippy content={formik.errors.password} placement={'bottom'}>
+                            <i className={`fa-solid fa-circle-exclamation ${cx('exclamation-mark')}`}></i>
                         </Tippy> : null
                     }
                 </div>
@@ -100,9 +100,9 @@ function LoginSigup() {
             </form>
         </div>
 
-        {showFormSignup &&  
+        {showFormSignup &&
             <div className={cx("signup-container")}>
-                <Signup setShowFormSignup={setShowFormSignup}/>
+                <Signup setShowFormSignup={setShowFormSignup} />
             </div>
         }
 

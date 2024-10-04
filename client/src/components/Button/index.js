@@ -20,6 +20,7 @@ function Button({ to, href, first, second, third, four, five, children, classNam
 
 
     const classes = cx('wrapper', {
+        [className]: className,
         first,
         second,
         third,

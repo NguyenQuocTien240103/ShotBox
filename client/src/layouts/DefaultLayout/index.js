@@ -6,11 +6,13 @@ const cx = classnames.bind(styles)
 
 function DefaultLayout({ children }) {
     return (<div className={cx('wrapper')}>
-        <Navbar fixLogin href='/home' />
+        <Navbar defaultLayout href='/home' />
         <div className={cx('container')}>
             <Sidebar />
-            <div>
-                {children}x
+            <div className={cx('block')}>
+                <div className={cx('main-content')}>
+                    {children}
+                </div>
             </div>
         </div>
 

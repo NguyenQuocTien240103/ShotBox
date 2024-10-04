@@ -1,6 +1,16 @@
 .container{
     display: flex;
 }
+.block{
+    width: 100%;
+    background-color: #eaeaea;
+}
+.main-content{
+    margin-left: 190px;
+    margin-top: 55px;
+    height: calc(100vh - 55px);
+}
+
 // .upload-container{
 //     position: fixed;
 //     background-color:rgba(150, 148, 148, 0.8);
@@ -19,3 +29,5 @@
 //     transform: translate(-50%, -50%);
 //     background-color: red;
 // }
+
+

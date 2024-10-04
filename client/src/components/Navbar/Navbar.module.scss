@@ -56,3 +56,14 @@
     display: flex;
     align-items: center;
 }
+.circle-xmark{
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    cursor: pointer;
+    transition: .4s ease;
+    &:hover{
+        font-weight: 700;
+    }
+
+}

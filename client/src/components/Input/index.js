@@ -6,18 +6,23 @@ function Input({ className, type, placeholder, error, value, onChange, onBlur, .
     const classes = cx({
         [className]: className
     })
+    const props = {
+        onChange,
+        onBlur,
+    }
     return (
         <div className={cx('wrapper')}>
-            <input 
-            className={classes} 
-            type={type} 
-            id={otherProps.id} 
-            name={otherProps.name} 
-            placeholder={placeholder} 
-            value={value} 
-            autoComplete={otherProps.autoComplete} 
-            onChange={onChange} 
-            onBlur={onBlur} 
+            <input
+                className={classes}
+                type={type}
+                id={otherProps.id}
+                name={otherProps.name}
+                placeholder={placeholder}
+                value={value}
+                autoComplete={otherProps.autoComplete}
+                // onChange={onChange}
+                // onBlur={onBlur}
+                {...props}
             />
             <span className={cx('message')}>{error}</span>
 
