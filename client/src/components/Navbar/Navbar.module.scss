@@ -1,6 +1,7 @@
 .wrapper{
     position: fixed;
     width: 100%;
+    height: var(--height-navbar);
     background-color: rgba(255, 255, 255, .97);
     color: black;
     display: flex;
@@ -9,9 +10,9 @@
     box-shadow: 0 0 13px rgba(0, 0, 0, .1);
 }
 .logo{
+    display: inline-block;
     width: 128px;
     height: 16px;
-    float: left;
     font-size: 14px;
     color: #222;
     margin: 18px 0 12px 18px;
@@ -21,7 +22,7 @@
     margin-right: 3px;
     position: relative;
 }
-.fix-login{
+.fix-toolbar{
     display: flex;
     align-items: center;
 }

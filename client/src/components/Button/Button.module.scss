@@ -13,7 +13,9 @@
     }
 }
 .first{
-    padding: 10px 24px;
+    display: inline-block;
+    min-width: 100px;
+    padding: 6px 8px;
     background-color: #ffc246;
     color:white;
     
@@ -32,38 +34,32 @@
     border-radius: 0;
     padding: 20px 0;
     color:white;
-    border-bottom:1px solid white;
+    border-bottom:1px solid gray;
     &:hover{
-    background-color: black;
-    // background-color: #ffc246;
+        background-color: white;
+        color: black;
     }
 }
 .four{
     border-radius: 0;
     background-color: black;
-    color: white;
-    font-weight: 400;
+    color: #a3a3a3;
+    font-weight: 600;
     text-align: left;
     padding: 5px 5px;
     font-size: 14px;
     &:hover{
         color: white;
-        font-weight: 600;
-    }
-    &:focus span{
-        content: "";
-    }   
+        font-weight: 700;
+    }  
 }
 .five{
     padding: 6px 18px;
-    border-radius: 0;
-    // background-color: black;
     background-color: #474747;
     color:white;
     + .five{
         margin-left: 5px;
     }
-
 }
 .icon{
     background-color: white;

@@ -1,16 +1,15 @@
 .wrapper{
-    width: 60%;
-    height: 80%;
-    margin: 10px auto 0 auto;
-    // background-color: red;   
     display: flex;
     flex-direction: column;
+    width: 60%;
+    height: 80%;
+    margin: 10px auto 0 auto; 
 }
-.new-demo{
+.action-get-img{
     margin-top: 10px;
     margin-bottom: 10px;
     text-align: center;
 }
-.demo{
+.action{
     text-align: center;
 }
