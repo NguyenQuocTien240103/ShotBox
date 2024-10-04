@@ -5,7 +5,8 @@ const cx = classNames.bind(styles)
 function MainLayout({ children }) {
     return (<div className={cx('wrapper')}>
         <Navbar mainLayout href='/'>
-            <h1 className={cx('title')}>The beautiful memories – captured in every photo</h1>
+            {/* <h1 className={cx('title')}>The beautiful memories – captured in every photo</h1> */}
+            aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
         </Navbar>
         {children}
     </div>);

@@ -38,6 +38,7 @@
     display: flex;
     align-items: center;
 }
+
 .upload{
     position: fixed;    
     left: 50%;
@@ -45,8 +46,7 @@
     min-width: 450px;
     height: 150px;
     transform: translate(-50%, -50%);
-    // background-color: rgb(175, 170, 170);
-    background-color: #efefef;
+    background-color: #efefef;  
     padding: 30px 20px;
 }
 .frame{
