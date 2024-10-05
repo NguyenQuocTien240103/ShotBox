@@ -1,7 +1,6 @@
 import Main from '../pages/Main'
-import Account from '../pages/Account'
+import LoginSignup from '../pages/LoginSignup'
 import Album from '../pages/Album'
-import Discover from '../pages/Discover'
 import Home from '../pages/Home'
 import Images from '../pages/Images'
 import User from '../pages/User'
@@ -14,17 +13,13 @@ const routes = [
         layout: 'MainLayout'
     },
     {
-        path: '/account',
-        component: Account,
+        path: '/login',
+        component: LoginSignup,
         layout: null
     },
     {
         path: '/home',
         component: Home,
-    },
-    {
-        path: '/discover',
-        component: Discover,
     },
     {
         path: '/webcam',
