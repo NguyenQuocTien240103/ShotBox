@@ -11,7 +11,7 @@ function NavBar({ mainLayout, defaultLayout, href, children }) {
 
     const dispatch = useDispatch();
 
-    const handleOnclick = (e)=>{
+    const handleOnclick = (e) => {
         const action = showUpload(true);
         dispatch(action)
     }
@@ -27,7 +27,7 @@ function NavBar({ mainLayout, defaultLayout, href, children }) {
 
         {mainLayout &&
             <div className={cx('actions')} >
-                <Button first to='/account'>Log In</Button>
+                <Button first to='/login'>Log In</Button>
             </div >
         }
 
