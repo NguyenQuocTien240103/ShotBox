@@ -1,4 +1,4 @@
-import axios from 'axios';
+// import axios from 'axios';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import classNames from "classnames/bind";
@@ -32,9 +32,9 @@ function Signup({ setShowFormSignup }) {
         validationSchema: validationSchema,
         onSubmit: (value) => {
             console.log(value)
-            axios.post('http://localhost:8080/register', value)
-                .then(res => console.log(res))
-                .catch(err => console.log(err))
+            // axios.post('http://localhost:8080/register', value)
+            //     .then(res => console.log(res))
+            //     .catch(err => console.log(err))
         }
     })
 

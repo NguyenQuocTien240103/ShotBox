@@ -1,16 +1,23 @@
+import { useState } from 'react';
+import {useDispatch} from 'react-redux'
+import {useNavigate} from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import classNames from "classnames/bind";
 import Tippy from '@tippyjs/react';
-import 'tippy.js/dist/tippy.css'; // optiona
+import 'tippy.js/dist/tippy.css'; // option
 import 'tippy.js/themes/light.css';
 import styles from './LoginSignup.module.scss'
+import {authLogin} from '../../actions/auth'
 import Input from "../Input";
 import Signup from '../Signup';
-import { useState } from 'react';
+// import * as request from '../../utils/request'
+// import * as demoService from '../../services/demoService'
 const cx = classNames.bind(styles)
 function LoginSigup() {
     const [showFormSignup, setShowFormSignup] = useState(false);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const validationSchema = Yup.object({
         username: Yup.string()
@@ -28,7 +35,42 @@ function LoginSigup() {
         },
         validationSchema: validationSchema,
         onSubmit: (value) => {
-            console.log(value)
+            console.log(value);
+            if(value.username === 'tiennhi' && value.password === '123456'){
+                localStorage.setItem('authToken','demo-token');
+                dispatch(authLogin());
+                navigate('/home');
+            }
+            else{
+                alert('thong tin k chinh xac');
+            }
+            // const fetchApi = async () =>{
+            //     try {
+            //         const response = await  demoService.show()
+            //         let arr = response;
+            //         let check = false;
+            //         for(let i = 0 ; i < arr.length ; i++){
+            //             if(arr[i].name==='Glenna Reichert'){
+            //                 console.log(arr[i])
+            //                 check = true;
+            //             }
+            //         }
+    
+            //         if(check){
+            //         localStorage.setItem('authToken','demo-token');
+            //         dispatch(authLogin());
+            //         navigate('/home');
+            //         }
+            //         else{
+            //             alert('thong tin k chinh xac');
+            //         }
+                    
+                    
+            //     } catch (error) {
+            //         console.log(error);
+            //     }
+            // }
+            // fetchApi();
         }
     })
 
