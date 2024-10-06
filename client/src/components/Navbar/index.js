@@ -1,19 +1,25 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import classnames from 'classnames/bind'
 import { useDispatch } from 'react-redux'
-import Button from '../Button'
-import { showUpload } from '../../actions/upload'
+import { Link,useNavigate } from 'react-router-dom'
+import classnames from 'classnames/bind'
 import styles from './Navbar.module.scss'
+import { showUpload } from '../../actions/upload'
+import {authLogout} from '../../actions/auth'
+import Button from '../Button'
 const cx = classnames.bind(styles)
 function NavBar({ mainLayout, defaultLayout, href, children }) {
     const [showMenuItems, setShowMenuItems] = useState(false)
-
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleOnclick = (e) => {
         const action = showUpload(true);
         dispatch(action)
+    }
+    const handleOnlickLogout = (e) =>{
+        localStorage.removeItem('authToken');
+        dispatch(authLogout());
+        navigate('/login')
     }
 
     const props = {
@@ -50,7 +56,7 @@ function NavBar({ mainLayout, defaultLayout, href, children }) {
                         {showMenuItems &&
                             <div className={cx('menu-items')}>
                                 <Button to='/user' four>Information</Button>
-                                <Button to='/' four>Logout</Button>
+                                <Button four onClick={handleOnlickLogout}>Logout</Button>
                             </div>
                         }
                     </Button>

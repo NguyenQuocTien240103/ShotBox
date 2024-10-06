@@ -1,8 +1,8 @@
-import Webcam from 'react-webcam'
-import styles from './Camera.module.scss'
-import classNames from 'classnames/bind'
-import Button from '../Button'
 import { useState } from 'react'
+import Webcam from 'react-webcam'
+import classNames from 'classnames/bind'
+import styles from './Camera.module.scss'
+import Button from '../Button'
 const cx = classNames.bind(styles)
 function Camera() {
     const [showCamera, setShowCamera] = useState(false)
@@ -33,7 +33,7 @@ function Camera() {
                 )}
             </Webcam>
         }
-
+        
         <div className={cx('action')}>
             <Button first onClick={() => { setShowCamera(!showCamera) }}>{showCamera ? 'Hide Camera' : 'Show Camera'}</Button>
         </div>

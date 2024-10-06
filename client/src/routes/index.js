@@ -10,32 +10,42 @@ const routes = [
     {
         path: '/',
         component: Main,
-        layout: 'MainLayout'
+        layout: 'MainLayout',
+        isPrivate: false 
     },
     {
         path: '/login',
         component: LoginSignup,
-        layout: null
+        layout: null,
+        isPrivate: false 
     },
     {
         path: '/home',
         component: Home,
+        isPrivate: true 
     },
     {
         path: '/webcam',
         component: Webcam,
+        isPrivate: true 
+
     },
     {
         path: '/images',
         component: Images,
+        isPrivate: true 
+
     },
     {
         path: '/album',
         component: Album,
+        isPrivate: true 
+
     },
     {
         path: '/user',
         component: User,
+        isPrivate: true 
     },
 
 ]
