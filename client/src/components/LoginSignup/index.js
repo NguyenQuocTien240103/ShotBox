@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import {useDispatch} from 'react-redux'
-import {useNavigate} from 'react-router-dom';
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import classNames from "classnames/bind";
@@ -8,9 +8,10 @@ import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css'; // option
 import 'tippy.js/themes/light.css';
 import styles from './LoginSignup.module.scss'
-import {authLogin} from '../../actions/auth'
+import { authLogin } from '../../actions/auth'
 import Input from "../Input";
 import Signup from '../Signup';
+import axios from 'axios';
 // import * as request from '../../utils/request'
 // import * as demoService from '../../services/demoService'
 const cx = classNames.bind(styles)
@@ -22,10 +23,10 @@ function LoginSigup() {
     const validationSchema = Yup.object({
         username: Yup.string()
             .required('Required')
-            .min(5, 'Must be less 5 characters'),
+            .min(5, 'Must be at least 5 characters'),
         password: Yup.string()
             .required('Required')
-            .min(5, 'Must be less 5 characters'),
+            .min(5, 'Must be at least 5 characters'),
     });
 
     const formik = useFormik({
@@ -35,15 +36,30 @@ function LoginSigup() {
         },
         validationSchema: validationSchema,
         onSubmit: (value) => {
-            console.log(value);
-            if(value.username === 'tiennhi' && value.password === '123456'){
-                localStorage.setItem('authToken','demo-token');
-                dispatch(authLogin());
-                navigate('/home');
-            }
-            else{
-                alert('thong tin k chinh xac');
-            }
+            axios.post('http://localhost:8080/login', value, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(res => {
+                    const data = res.data.data;
+                    if (data.password === formik.values.password) {
+                        localStorage.setItem('authToken', 'demo-token');
+                        dispatch(authLogin());
+                        navigate('/home');
+                    }
+                    else {
+                        formik.setFieldError('password', 'Password is not correct');
+                    }
+                })
+                .catch(err => {
+                    const data = err.response.data;
+                    formik.setFieldError('username', data.error);
+                });
+            // axios.get('search')
+            //     .then((res) => {
+            //         console.log(res)
+            //     })
             // const fetchApi = async () =>{
             //     try {
             //         const response = await  demoService.show()
@@ -55,7 +71,7 @@ function LoginSigup() {
             //                 check = true;
             //             }
             //         }
-    
+
             //         if(check){
             //         localStorage.setItem('authToken','demo-token');
             //         dispatch(authLogin());
@@ -64,8 +80,8 @@ function LoginSigup() {
             //         else{
             //             alert('thong tin k chinh xac');
             //         }
-                    
-                    
+
+
             //     } catch (error) {
             //         console.log(error);
             //     }
@@ -107,7 +123,7 @@ function LoginSigup() {
                         onBlur={formik.handleBlur}
                     />
                     {formik.errors.username && formik.touched.username ?
-                        <Tippy content={formik.errors.username} placement={'bottom'}>
+                        <Tippy content={formik.errors.username} placement={'bottom'} >
                             <i className={`fa-solid fa-circle-exclamation ${cx('exclamation-mark')}`}></i>
                         </Tippy> : null
                     }

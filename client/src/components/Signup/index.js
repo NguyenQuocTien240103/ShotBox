@@ -1,4 +1,5 @@
-// import axios from 'axios';
+import axios from 'axios';
+// import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import classNames from "classnames/bind";
@@ -6,7 +7,7 @@ import styles from './Signup.module.scss'
 import Input from "../Input";
 const cx = classNames.bind(styles)
 function Signup({ setShowFormSignup }) {
-
+    // const navigate = useNavigate();
     const validationSchema = Yup.object({
         username: Yup.string()
             .required('Required')
@@ -32,9 +33,20 @@ function Signup({ setShowFormSignup }) {
         validationSchema: validationSchema,
         onSubmit: (value) => {
             console.log(value)
-            // axios.post('http://localhost:8080/register', value)
-            //     .then(res => console.log(res))
-            //     .catch(err => console.log(err))
+            axios.post('http://localhost:8080/register', value, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(res => {
+                    // console.log(res);
+                    // console.log('Response:', res.data);
+                    window.location.reload();
+                })
+                .catch(err => {
+                    // console.log(err.response);
+                    // console.log('Error:', err.response ? err.response.data : err.message);
+                });
         }
     })
 
