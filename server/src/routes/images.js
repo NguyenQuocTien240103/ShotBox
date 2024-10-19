@@ -3,9 +3,9 @@ import ImagesController from '../app/controllers/ImagesController.js'
 
 const router = express.Router();
 
-router.get('/', ImagesController.getImages);
+router.get('/', ImagesController.getAllImages);
 
-router.post('/', ImagesController.uploadImages);
+router.post('/', ImagesController.postImages);
 
 router.delete('/:id', ImagesController.deleteImages);
 

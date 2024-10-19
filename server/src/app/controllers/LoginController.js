@@ -1,21 +1,72 @@
 import User from '../models/User.js';
-class LoginController {
+import bcrypt from "bcrypt";
 
+class LoginController {
     // POST hocalhost/login
     async login(req, res) {
-
         try {
-            const user = await User.findByUsername(req.body);
-            if (user) {
-                return res.status(201).json({ data: user })
+            const { username, password } = req.body;
+            const user = await User.findByUsername(username);
+            if (!user) {
+                // res error if cannot find user 
+                return res.status(400).json({ field: 'username', error: 'Username is not correct' });
             }
-            else {
-                return res.status(400).json({ error: 'Username is not correct' });
+            const isPasswordValid = await bcrypt.compare(password, user.password);
+
+            if (!isPasswordValid) {
+                // res error if password is not correct 
+                return res.status(400).json({ field: 'password', error: 'Password is not correct' });
             }
+            // res data if success
+            return res.status(200).json({
+                data: user,
+            })
         } catch (error) {
             console.log(error);
+            return res.status(500).json({ error: 'Internal Server Error' });
         }
     }
 }
 
 export default new LoginController();
+
+// async login(req, res) {
+//     try {
+//         const { username, password } = req.body;
+
+//         // Tìm người dùng trong cơ sở dữ liệu
+//         const user = await User.findByUsername({ username });
+
+//         if (!user) {
+//             // Trả về phản hồi cho client nếu không tìm thấy user
+//             return res.status(400).json({ field: 'username', error: 'Username is not correct' });
+//         }
+
+//         // Kiểm tra mật khẩu
+//         const isPasswordValid = await bcrypt.compare(password, user.password);
+//         if (!isPasswordValid) {
+//             // Trả về phản hồi nếu mật khẩu không đúng
+//             return res.status(400).json({ field: 'password', error: 'Password is not correct' });
+//         }
+
+//         // Tạo JWT token sau khi đăng nhập thành công
+//         const token = jwt.sign(
+//             { id: user._id, username: user.username },
+//             process.env.JWT_SECRET,
+//             { expiresIn: '1h' }
+//         );
+
+//         return res.status(200).json({ 
+//             message: 'Login successful',
+//             token: token,
+//             user: {
+//                 id: user._id,
+//                 username: user.username,
+//                 email: user.email
+//             }
+//         });
+//     } catch (error) {
+//         console.error(error);
+//         return res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// }

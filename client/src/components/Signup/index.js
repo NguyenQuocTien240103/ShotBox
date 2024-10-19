@@ -1,13 +1,13 @@
-import axios from 'axios';
-// import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import classNames from "classnames/bind";
 import styles from './Signup.module.scss'
+import * as registerService from '../../services/registerService';
 import Input from "../Input";
 const cx = classNames.bind(styles)
 function Signup({ setShowFormSignup }) {
-    // const navigate = useNavigate();
+
     const validationSchema = Yup.object({
         username: Yup.string()
             .required('Required')
@@ -17,7 +17,7 @@ function Signup({ setShowFormSignup }) {
             .email('Invalid email address'),
         password: Yup.string()
             .required('Required')
-            .min(6, 'Must be less 5 characters'),
+            .min(5, 'Must be less 5 characters'),
         password_confirmation: Yup.string()
             .oneOf([Yup.ref('password'), null], 'Passwords must match') // Validation for confirm password
             .required('Required')
@@ -32,23 +32,27 @@ function Signup({ setShowFormSignup }) {
         },
         validationSchema: validationSchema,
         onSubmit: (value) => {
-            console.log(value)
-            axios.post('http://localhost:8080/register', value, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-                .then(res => {
-                    // console.log(res);
-                    // console.log('Response:', res.data);
-                    window.location.reload();
-                })
-                .catch(err => {
-                    // console.log(err.response);
-                    // console.log('Error:', err.response ? err.response.data : err.message);
-                });
+            console.log(value);
+            const fetchApi = async () => {
+                try {
+                    const res = await registerService.register(value);
+                    if (res.data) {
+                        window.location.reload();
+                    }
+                    else {
+                        // ......................
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+            fetchApi();
         }
     })
+    useEffect(() => {
+        // call api ở đây
+
+    }, [formik.values.username])
 
     const handleOnclick = (e) => {
         setShowFormSignup(false)

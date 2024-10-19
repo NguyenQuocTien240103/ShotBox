@@ -4,15 +4,16 @@ import classNames from 'classnames/bind'
 import styles from './Camera.module.scss'
 import Button from '../Button'
 const cx = classNames.bind(styles)
-function Camera() {
-    const [showCamera, setShowCamera] = useState(false)
+function Camera({ setCapturedImage }) {
+
     const videoConstraints = {
-        width: 1280,
-        height: 720,
+        width: 1080,
+        height: 490,
         facingMode: "user"
     };
+
     return (<div className={cx('wrapper')} >
-        {showCamera &&
+        {
             <Webcam
                 audio={false}
                 screenshotFormat="image/jpeg"
@@ -23,20 +24,17 @@ function Camera() {
                         <Button
                             first
                             onClick={() => {
-                                const imageSrc = getScreenshot({ width: 1920, height: 1080 })
+                                const imageSrc = getScreenshot({ width: 700, height: 400 })
+                                setCapturedImage(imageSrc);
                             }}
                         >
                             Take a photo
                         </Button>
-
                     </div>
                 )}
             </Webcam>
         }
-        
-        <div className={cx('action')}>
-            <Button first onClick={() => { setShowCamera(!showCamera) }}>{showCamera ? 'Hide Camera' : 'Show Camera'}</Button>
-        </div>
+
     </div >);
 }
 
