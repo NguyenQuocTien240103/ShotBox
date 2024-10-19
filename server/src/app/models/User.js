@@ -1,7 +1,12 @@
 import db from '../../config/database.js'
 const User = {
+    getAllUsername: async () => {
+        const query = 'SELECT * FROM users';
+        const [rows] = await db.query(query);
+        return rows;
+    },
     findByUsername: async (data) => {
-        const username = data.username;
+        const username = data;
         const query = 'SELECT * FROM users WHERE name = ?';
         const [rows] = await db.query(
             query, [username]

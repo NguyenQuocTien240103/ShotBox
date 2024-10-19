@@ -1,31 +1,89 @@
+import { useState } from 'react';
+import axios from 'axios';
 import React, { useRef } from 'react';
 import classNames from 'classnames/bind';
-import styles from './Upload.module.scss'
+import styles from './Upload.module.scss';
 import Button from '../Button';
-const cx = classNames.bind(styles)
 
-function UpLoad({onClick}) {
+const cx = classNames.bind(styles);
+
+function UpLoad({ onClick }) {
     const fileInputRef = useRef(null);
+    const [selectedFile, setSelectedFile] = useState(null);
+
     const handleSelectFromDevice = () => {
         fileInputRef.current.click();
     };
-    return (<div className={cx('wrapper')}>
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setSelectedFile(file);
+            // console.log('Selected file:', file.name);
+        }
+    };
+
+    const handleUpload = async (e) => {
+        // Chặn hành vi mặc định của sự kiện
+        // e.preventDefault();
+
+        const CLOUD_NAME = 'djfgf1byn';
+        const PRESET_NAME = 'demo-upload';
+        const FOLDER_NAME = 'Demo';
+        const api = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
+
+        const formData = new FormData();
+
+        formData.append('file', selectedFile); // 'file' là tên trường được yêu cầu bởi Cloudinary
+        formData.append('upload_preset', PRESET_NAME);
+        formData.append('folder', FOLDER_NAME); // Nếu bạn muốn lưu tệp vào thư mục 'Demo'
+
+        try {
+            const response = await axios.post(api, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            console.log(response.data.secure_url); // Hiển thị thông tin phản hồi từ Cloudinary
+            const res = await axios.post('http://localhost:8080/images', {
+                url: response.data.secure_url,
+            })
+            console.log(res.data.data)
+        } catch (error) {
+            console.error('Upload failed:', error);
+        }
+        window.location.reload();
+    };
+
+    return (
+        <div className={cx('wrapper')}>
             <div className={cx('upload')}>
                 <div className={cx('wrapper-button')}>
-                  
-                        <Button five>use-url</Button>
-                        <Button five onClick={handleSelectFromDevice}>select-from-device</Button>
-                  
+                    {/* <Button five>use-url</Button> */}
+                    <Button five onClick={handleSelectFromDevice}>Select-From-Device</Button>
                 </div>
                 <div className={cx('form')}>
                     <div className={cx('frame')}>
-                            <input type="text" style={{width:'340px', fontSize: '14px', lineHeight:'2.0', height: '27px', outline: 'none' }} placeholder='Paste your URL here...' />
-                            <Button five>UpLoad</Button>
+                        <input
+                            type="text"
+                            style={{ width: '340px', fontSize: '14px', lineHeight: '2.0', height: '27px', outline: 'none' }}
+                            placeholder='Paste your URL here...'
+                            value={selectedFile ? selectedFile.name : ''} // Kiểm tra nếu selectedFile tồn tại
+                            readOnly // Ngăn người dùng chỉnh sửa
+                        />
+                        <Button five onClick={handleUpload}>UpLoad</Button>
                     </div>
                 </div>
-                <input type="file" ref={fileInputRef} style={{ display: 'none' }} />
+                <input
+                    type="file"
+                    ref={fileInputRef}
+                    style={{ display: 'none' }}
+                    onChange={handleFileChange}
+                />
                 <i className={`fa-regular fa-circle-xmark ${cx('circle-xmark')}`} onClick={onClick}></i>
             </div>
-    </div>);
+        </div>
+    );
 }
+
 export default UpLoad;

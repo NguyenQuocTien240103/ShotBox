@@ -1,15 +1,19 @@
+import Images from '../models/Images.js';
 
 class ImagesController {
-    // Get
-    getImages(req, res) {
-        res.send('Get');
+    // Get localhost/images/
+    async getAllImages(req, res) {
+        const images = await Images.getAllImages();
+        console.log(images)
+        return res.status(201).json({ data: images });
     }
-    // Post
-    uploadImages(req, res) {
-        res.send('Post');
+    // Post localhost/images/
+    async postImages(req, res) {
+        await Images.create(req.body);
+        return res.status(201).json({ data: 'Success' });
     }
     // Delete
-    deleteImages(req, res) {
+    async deleteImages(req, res) {
         const imageId = req.params.id;
         res.send(`Delete ${imageId}`);
     }
