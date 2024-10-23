@@ -37,14 +37,15 @@ function LoginSigup() {
             const fetchApi = async () => {
                 try {
                     const res = await loginService.login(value);
-                    if (res.data) {
-                        localStorage.setItem('authToken', 'demo-token');
+                    if (res) {
+                        localStorage.setItem('authToken', res.token);
                         dispatch(authLogin());
                         navigate('/home');
                     }
                 }
                 catch (error) {
                     console.log(error.response.data);
+                    // console.log(error)
                     const data = error.response.data;
                     if (data.field === 'username') {
                         formik.setFieldError(data.field, data.error);
@@ -118,7 +119,7 @@ function LoginSigup() {
                 </div>
 
                 <div className={cx("forgot")}>
-                    <a href="">Forgot password?</a>
+                    <a href="/">Forgot password?</a>
                 </div>
 
                 <button className={cx("btn-signup")} type='button' onClick={handleOnclick}>Create new account</button>

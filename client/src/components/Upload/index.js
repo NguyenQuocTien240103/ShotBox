@@ -4,7 +4,7 @@ import React, { useRef } from 'react';
 import classNames from 'classnames/bind';
 import styles from './Upload.module.scss';
 import Button from '../Button';
-
+import * as ImageService from '../../services/imageService';
 const cx = classNames.bind(styles);
 
 function UpLoad({ onClick }) {
@@ -19,13 +19,10 @@ function UpLoad({ onClick }) {
         const file = e.target.files[0];
         if (file) {
             setSelectedFile(file);
-            // console.log('Selected file:', file.name);
         }
     };
 
     const handleUpload = async (e) => {
-        // Chặn hành vi mặc định của sự kiện
-        // e.preventDefault();
 
         const CLOUD_NAME = 'djfgf1byn';
         const PRESET_NAME = 'demo-upload';
@@ -44,11 +41,11 @@ function UpLoad({ onClick }) {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            console.log(response.data.secure_url); // Hiển thị thông tin phản hồi từ Cloudinary
-            const res = await axios.post('http://localhost:8080/images', {
+            // console.log(response.data.secure_url); // Hiển thị thông tin phản hồi từ Cloudinary
+            const res = await ImageService.createImage({
                 url: response.data.secure_url,
             })
-            console.log(res.data.data)
+            alert(res.data)
         } catch (error) {
             console.error('Upload failed:', error);
         }

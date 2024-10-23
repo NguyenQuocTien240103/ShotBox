@@ -1,5 +1,13 @@
+import User from '../models/User.js';
 
 class UserController {
+    // get localhost/user/
+    async getAllUser(req, res) {
+        const users = await User.getAllUsername();
+        return res.status(200).json({
+            data: users
+        })
+    }
     // GET request để lấy thông tin người dùng theo ID
     getUserById(req, res) {
         const userId = req.params.id;

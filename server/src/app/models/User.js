@@ -16,9 +16,17 @@ const User = {
         }
         return null;
     },
-    // checkPassword: async (data) => {
-
-    // },
+    findByEmail: async (data) => {
+        const email = data;
+        const query = 'SELECT * FROM users WHERE email = ?';
+        const [rows] = await db.query(
+            query, [email]
+        );
+        if (rows.length > 0) {
+            return rows[0];
+        }
+        return null;
+    },
     create: async (data) => {
         const { username, email, password } = data;
         const query = 'INSERT INTO users (name, email, password) VALUES (?, ?, ?)';

@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Link,useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import classnames from 'classnames/bind'
 import styles from './Navbar.module.scss'
 import { showUpload } from '../../actions/upload'
-import {authLogout} from '../../actions/auth'
+import { authLogout } from '../../actions/auth'
 import Button from '../Button'
 const cx = classnames.bind(styles)
 function NavBar({ mainLayout, defaultLayout, href, children }) {
@@ -16,7 +16,7 @@ function NavBar({ mainLayout, defaultLayout, href, children }) {
         const action = showUpload(true);
         dispatch(action)
     }
-    const handleOnlickLogout = (e) =>{
+    const handleOnlickLogout = (e) => {
         localStorage.removeItem('authToken');
         dispatch(authLogout());
         navigate('/login')
