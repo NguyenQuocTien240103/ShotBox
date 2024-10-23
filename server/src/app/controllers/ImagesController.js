@@ -4,13 +4,13 @@ class ImagesController {
     // Get localhost/images/
     async getAllImages(req, res) {
         const images = await Images.getAllImages();
-        console.log(images)
-        return res.status(201).json({ data: images });
+        // console.log(images)
+        return res.status(200).json({ data: images });
     }
     // Post localhost/images/
     async postImages(req, res) {
         await Images.create(req.body);
-        return res.status(201).json({ data: 'Success' });
+        return res.status(200).json({ data: 'Success' });
     }
     // Delete
     async deleteImages(req, res) {

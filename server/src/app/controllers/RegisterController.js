@@ -9,16 +9,19 @@ class RegisterController {
             let data = req.body;
             const userExists = await User.findByUsername(data.username);
             if (userExists) {
-                return res.status(400).json({ error: 'User already exists.' });
+                return res.status(401).json({ error: 'User already exists.' });
             }
+            // const emailExists = await User.findByEmail(data.email);
+            // if (emailExists) {
+            //     return res.status(401).json({ error: 'Email already exists.' });
+            // }
             const hashPassword = await bcrypt.hash(data.password, saltRounds);
             let newData = {
                 ...data,
                 password: hashPassword
             }
-            // await User.create(req.body);
             await User.create(newData);
-            return res.status(201).json({ data: 'Register success' });
+            return res.status(200).json({ data: 'Register success' });
         } catch (error) {
             console.error('Error during registration:', error); // Log lỗi chi tiết
             return res.status(500).json({ error: error.message });

@@ -1,4 +1,5 @@
 import User from '../models/User.js';
+import jwt from 'jsonwebtoken';
 import bcrypt from "bcrypt";
 
 class LoginController {
@@ -18,8 +19,29 @@ class LoginController {
                 return res.status(400).json({ field: 'password', error: 'Password is not correct' });
             }
             // res data if success
+            const token = jwt.sign(
+                {
+                    id: user.id,
+                    username: user.name,
+                    email: user.email,
+                },
+                process.env.JWT_SECRET,
+                {
+                    expiresIn: process.env.JWT_EXPIRE,
+                }
+            )
+
+            // return res.status(200).json({
+            //     data: user,
+            // })
             return res.status(200).json({
-                data: user,
+                message: 'Login Successful',
+                token: token,
+                user: {
+                    id: user.id,
+                    username: user.name,
+                    email: user.email
+                }
             })
         } catch (error) {
             console.log(error);

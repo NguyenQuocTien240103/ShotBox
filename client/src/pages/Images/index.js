@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import classNames from 'classnames/bind'
 import styles from './Images.module.scss'
+import * as ImageService from '../../services/imageService'
 const cx = classNames.bind(styles)
 function Images() {
     const [img, setImg] = useState([]);
-
     useEffect(() => {
         const getImages = async () => {
             try {
-                const res = await axios.get('http://localhost:8080/images');
-                console.log(res.data.data);
-                const arr = res.data.data;
-                setImg(arr);
+                const res = await ImageService.showAllImages();
+                setImg(res.data);
             } catch (error) {
                 console.error(error);
             }

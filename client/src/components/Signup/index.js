@@ -36,14 +36,11 @@ function Signup({ setShowFormSignup }) {
             const fetchApi = async () => {
                 try {
                     const res = await registerService.register(value);
-                    if (res.data) {
+                    if (res) {
                         window.location.reload();
                     }
-                    else {
-                        // ......................
-                    }
                 } catch (error) {
-                    console.log(error);
+                    alert(error.response.data.error);
                 }
             }
             fetchApi();
