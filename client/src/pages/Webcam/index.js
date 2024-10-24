@@ -9,7 +9,7 @@ const cx = classNames.bind(styles);
 
 function Webcam() {
     const [capturedImage, setCapturedImage] = useState(null);
-    console.log(capturedImage)
+    // console.log(capturedImage)
     const handleAddImages = async () => {
         const CLOUD_NAME = 'djfgf1byn';
         const PRESET_NAME = 'demo-upload';

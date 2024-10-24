@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import classNames from "classnames/bind";
@@ -9,15 +8,15 @@ import 'tippy.js/dist/tippy.css'; // option
 import 'tippy.js/themes/light.css';
 import styles from './LoginSignup.module.scss'
 import * as loginService from '../../services/loginService'
-import { authLogin } from '../../actions/auth'
+import { authLogin } from '../../redux/actions/auth'
 import Input from "../Input";
 import Signup from '../Signup';
+
+
 const cx = classNames.bind(styles)
 function LoginSigup() {
     const [showFormSignup, setShowFormSignup] = useState(false);
     const dispatch = useDispatch();
-    const navigate = useNavigate();
-
     const validationSchema = Yup.object({
         username: Yup.string()
             .required('Required')
@@ -38,14 +37,11 @@ function LoginSigup() {
                 try {
                     const res = await loginService.login(value);
                     if (res) {
-                        localStorage.setItem('authToken', res.token);
-                        dispatch(authLogin());
-                        navigate('/home');
+                        dispatch(authLogin(res));
                     }
                 }
                 catch (error) {
                     console.log(error.response.data);
-                    // console.log(error)
                     const data = error.response.data;
                     if (data.field === 'username') {
                         formik.setFieldError(data.field, data.error);

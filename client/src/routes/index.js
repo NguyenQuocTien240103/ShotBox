@@ -11,41 +11,50 @@ const routes = [
         path: '/',
         component: Main,
         layout: 'MainLayout',
-        isPrivate: false 
+        isPrivate: false
     },
     {
         path: '/login',
         component: LoginSignup,
         layout: null,
-        isPrivate: false 
+        isPrivate: false
     },
     {
         path: '/home',
         component: Home,
-        isPrivate: true 
+        isPrivate: true,
+        role: 'rin2803911',
     },
     {
         path: '/webcam',
         component: Webcam,
-        isPrivate: true 
+        isPrivate: true,
+        role: 'rin2803911',
 
     },
     {
         path: '/images',
         component: Images,
-        isPrivate: true 
+        isPrivate: true
 
     },
     {
         path: '/album',
         component: Album,
-        isPrivate: true 
+        isPrivate: true
 
     },
     {
         path: '/user',
         component: User,
-        isPrivate: true 
+        isPrivate: true
+    },
+
+    {
+        path: '/admin',
+        component: Album,
+        isPrivate: true,
+        permission: true,
     },
 
 ]
