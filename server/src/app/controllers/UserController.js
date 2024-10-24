@@ -8,6 +8,12 @@ class UserController {
             data: users
         })
     }
+    async getUser(req, res) {
+        return res.status(200).json(
+            req.user
+        )
+        // return res.status(201).send("hi")
+    }
     // GET request để lấy thông tin người dùng theo ID
     getUserById(req, res) {
         const userId = req.params.id;

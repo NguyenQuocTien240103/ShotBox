@@ -8,6 +8,7 @@ import * as ImageService from '../../services/imageService';
 const cx = classNames.bind(styles);
 
 function UpLoad({ onClick }) {
+
     const fileInputRef = useRef(null);
     const [selectedFile, setSelectedFile] = useState(null);
 

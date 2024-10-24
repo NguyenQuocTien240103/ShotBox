@@ -1,25 +1,25 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import classnames from 'classnames/bind'
 import styles from './Navbar.module.scss'
-import { showUpload } from '../../actions/upload'
-import { authLogout } from '../../actions/auth'
+import { showUpload } from '../../redux/actions/upload'
+import { authLogout } from '../../redux/actions/auth'
 import Button from '../Button'
+import { jwtDecode } from "jwt-decode";
 const cx = classnames.bind(styles)
 function NavBar({ mainLayout, defaultLayout, href, children }) {
     const [showMenuItems, setShowMenuItems] = useState(false)
     const dispatch = useDispatch();
-    const navigate = useNavigate();
-
+    if (localStorage.getItem('authToken')) {
+        var user = jwtDecode(localStorage.getItem('authToken'));
+    }
     const handleOnclick = (e) => {
         const action = showUpload(true);
         dispatch(action)
     }
     const handleOnlickLogout = (e) => {
-        localStorage.removeItem('authToken');
         dispatch(authLogout());
-        navigate('/login')
     }
 
     const props = {
@@ -48,7 +48,7 @@ function NavBar({ mainLayout, defaultLayout, href, children }) {
                 </div >
 
                 <div className={cx('actions')} >
-                    <Button to='/user'>NguyenQuocTien</Button>
+                    <Button to='/user'>{user ? user.username : ""}</Button>
                 </div >
 
                 <div className={cx('actions')} >
