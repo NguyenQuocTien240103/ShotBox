@@ -1,8 +1,8 @@
 import db from '../../config/database.js'
-const Image = {
-    getAllImages: async (userId) => {
+const Album = {
+    getAllAlbums: async (userId) => {
         try {
-            const query = 'SELECT * FROM images WHERE userId = ?';
+            const query = 'SELECT * FROM album WHERE userId = ?';
             const [rows] = await db.query(query, [userId]);
             return rows;
         } catch (error) {
@@ -10,16 +10,19 @@ const Image = {
             throw new Error("Unable to fetch images.");
         }
     },
-    create: async (url, userId) => {
+    create: async (data, userId) => {
+        const albumName = data.albumName;
+        const description = data.description;
         try {
-            const query = 'INSERT INTO images (url, userId) VALUES (?, ?)';
-            const [result] = await db.query(query, [url, userId]);
+            const query = 'INSERT INTO album (userId, albumName, description) VALUES (?, ?, ?)';
+            const [result] = await db.query(query, [userId, albumName, description]);
             return result.insertId;
         } catch (error) {
-            console.error('Error inserting image:', error); // Ghi log lỗi chi tiết
-            throw new Error('Unable to insert image into the database.');
+            console.error(`Error inserting album`, error);
+            throw new Error('Unable to insert album into the database.');
         }
     },
+
     delete: async (imgId) => {
         try {
             const query = 'DELETE FROM images WHERE id = ?';
@@ -33,4 +36,4 @@ const Image = {
 
 }
 
-export default Image;
+export default Album;
