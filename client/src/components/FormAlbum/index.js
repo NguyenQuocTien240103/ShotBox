@@ -9,6 +9,7 @@ function FormAlbum({ handleUnmount }) {
     const [albumName, setAlbumName] = useState('');
     const [description, setDescription] = useState('');
     const handleOnclickAdd = (e) => {
+
         const create = async () => {
             try {
                 const res = await AlbumService.createAlbum({
