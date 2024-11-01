@@ -1,5 +1,6 @@
 import classNames from 'classnames/bind';
 import styles from './FormAlbum.module.scss';
+import { v4 as uuidv4 } from 'uuid';
 import Input from '../Input';
 import Button from '../Button';
 import * as AlbumService from '../../services/albumService'
@@ -8,13 +9,15 @@ const cx = classNames.bind(styles);
 function FormAlbum({ handleUnmount }) {
     const [albumName, setAlbumName] = useState('');
     const [description, setDescription] = useState('');
-    const handleOnclickAdd = (e) => {
 
+    const handleOnclickAdd = (e) => {
         const create = async () => {
+            const uniqueId = uuidv4();
             try {
                 const res = await AlbumService.createAlbum({
                     albumName: albumName,
                     description: description,
+                    location: uniqueId,
                 });
                 alert(res.data);
                 window.location.reload();

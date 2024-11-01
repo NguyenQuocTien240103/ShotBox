@@ -4,6 +4,8 @@ import registerRouter from './register.js';
 import imagesRouter from './images.js'
 import userRouter from './user.js'
 import albumRouter from './album.js'
+import albumImagesRouter from './albumImages.js'
+
 
 function routes(app) {
     app.use('/login', loginRouter);
@@ -11,6 +13,8 @@ function routes(app) {
     app.use('/images', imagesRouter);
     app.use('/user', userRouter)
     app.use('/album', albumRouter)
+    app.use('/album/images', albumImagesRouter)
+
 
 }
 export default routes;

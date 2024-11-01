@@ -4,10 +4,9 @@ import delay from "../middleware/auth.js";
 const router = express.Router();
 router.all("*", delay);
 
-router.get('/', AlbumController.getAllAlbums);
-
+router.get('/:id', AlbumController.showAlbumDetail);
+router.get('/', AlbumController.showAllAlbums);
 router.post('/', AlbumController.postAlbum);
-
 router.delete('/:id', AlbumController.deleteAlbum);
 
 export default router;

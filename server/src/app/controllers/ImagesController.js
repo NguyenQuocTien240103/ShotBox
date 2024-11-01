@@ -6,7 +6,7 @@ class ImagesController {
         try {
             const { id, name, email } = req.user; // data handle from middleware
             const images = await Images.getAllImages(id);
-
+            console.log(images);
             return res.status(200).json({ data: images });
         } catch (error) {
             console.error("Error fetching images:", error); // Log lỗi chi tiết
@@ -32,7 +32,7 @@ class ImagesController {
         }
     }
 
-    // Delete
+    // Delete localhost/images/:id
     async deleteImages(req, res) {
         try {
             const imgId = req.params.id;
