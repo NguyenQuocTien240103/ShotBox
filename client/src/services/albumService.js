@@ -53,4 +53,14 @@ export const addImgToAlbum = async (value) => {
         throw error;
     }
 }
+export const deleteImgFromAlbum = async (idAlbumImg) => {
+    try {
+        const res = await request.deleteRequest(`/album/images/${idAlbumImg}`);
+        return res;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 

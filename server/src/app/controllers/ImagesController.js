@@ -1,4 +1,5 @@
 import Images from '../models/Images.js';
+import AlbumImage from '../models/AlbumImage.js';
 
 class ImagesController {
     // Get localhost/images/
@@ -19,7 +20,7 @@ class ImagesController {
             const { url } = req.body;
             const { id, name, email } = req.user;
 
-            // Kiểm tra đầu vào
+            // check input
             if (!url) {
                 return res.status(400).json({ error: 'Image URL is required.' });
             }
@@ -27,7 +28,7 @@ class ImagesController {
             await Images.create(url, id);
             return res.status(201).json({ data: 'Image uploaded successfully' });
         } catch (error) {
-            console.error('Error uploading image:', error); // Log lỗi chi tiết
+            console.error('Error uploading image:', error); // Log detail error
             return res.status(500).json({ error: 'Internal Server Error' });
         }
     }
@@ -36,6 +37,9 @@ class ImagesController {
     async deleteImages(req, res) {
         try {
             const imgId = req.params.id;
+            // step1: delete images from album before delete original images
+            const deleteImageFromAlbum = await AlbumImage.deleteByImgId(imgId);
+            // step2: delete original images
             const affectedRows = await Images.delete(imgId);
 
             if (affectedRows > 0) {
@@ -48,7 +52,6 @@ class ImagesController {
             res.status(500).json({ message: "Failed to delete image. Please try again later." });
         }
     }
-
 
 }
 
