@@ -20,6 +20,16 @@ const Album = {
             throw new Error("Unable to fetch images.");
         }
     },
+    isAlbumNameExists: async (albumName, userId) => {
+        try {
+            const query = 'SELECT COUNT(*) AS count FROM album WHERE albumName = ? AND userId = ?';
+            const [rows] = await db.query(query, [albumName, userId]);
+            return rows[0].count > 0; // Trả về true nếu có ít nhất 1 album trùng tên
+        } catch (error) {
+            console.error("Error checking album name:", error);
+            throw new Error("Unable to check album name.");
+        }
+    },
     create: async (data, userId) => {
         const albumName = data.albumName;
         const description = data.description;
@@ -33,17 +43,37 @@ const Album = {
             throw new Error('Unable to insert album into the database.');
         }
     },
-
-    delete: async (imgId) => {
+    isAlbumNameExists: async (albumName, userId) => {
         try {
-            const query = 'DELETE FROM images WHERE id = ?';
-            const [result] = await db.query(query, [imgId]);
+            const query = 'SELECT COUNT(*) AS count FROM album WHERE albumName = ? AND userId = ?';
+            const [rows] = await db.query(query, [albumName, userId]);
+            return rows[0].count > 0; // Trả về true nếu có ít nhất 1 album trùng tên
+        } catch (error) {
+            console.error("Error checking album name:", error);
+            throw new Error("Unable to check album name.");
+        }
+    },
+    update: async (id, data) => {
+        try {
+            const { albumName, description } = data;
+            const query = 'UPDATE album SET albumName = ?, description = ? WHERE id = ?';
+            const [result] = await db.query(query, [albumName, description, id]);
+            return result.affectedRows;
+        } catch (error) {
+            console.error('Error updating album:', error);
+            throw new Error('Failed to update album');
+        }
+    },
+    delete: async (id) => {
+        try {
+            const query = 'DELETE FROM album WHERE id = ?';
+            const [result] = await db.query(query, [id]);
             return result.affectedRows;
         } catch (error) {
             console.error("Error deleting image:", error);
             throw new Error("Failed to delete image. Please try again.");
         }
-    }
+    },
 
 }
 

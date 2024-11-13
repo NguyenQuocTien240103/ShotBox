@@ -22,6 +22,7 @@ function AlbumDetail() {
         const showAlbumDetail = async () => {
             try {
                 const res = await AlbumService.showAlbumDetail(id);
+                // console.log(res.data);
                 setAlbum(res.data);
                 setAlbumName(res.data.albumName);
                 setDescription(res.data.description);
@@ -93,13 +94,21 @@ function AlbumDetail() {
     }
 
     const handleSave = async () => {
-        // try {
-        //     await AlbumService.updateAlbumDetail(id, { albumName, description });
-        //     setAlbum({ ...album, albumName, description });
-        //     setFixAlbum(false); // Đóng form chỉnh sửa
-        // } catch (error) {
-        //     console.error("Error saving album:", error);
-        // }
+        const updateAlbum = async () => {
+            const id = album.id;
+            const data = {
+                albumName: albumName,
+                description: description
+            }
+            try {
+                const res = await AlbumService.updateAlbum(id, data);
+                alert(res.message);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        updateAlbum();
+        window.location.reload();
     };
 
     const handleCancel = () => {
@@ -107,6 +116,18 @@ function AlbumDetail() {
         setAlbumName(album.albumName);
         setDescription(album.description);
     };
+    const handleDeleteAlbum = (e) => {
+        const deleteAlbum = async () => {
+            const id = album.id;
+            try {
+                const res = await AlbumService.deleteAlbum(id);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        deleteAlbum();
+        window.location.href = "/album"
+    }
 
     const MenuItems = [
         {
@@ -187,15 +208,13 @@ function AlbumDetail() {
                         <p>Do you want to delete this album?</p>
                         <div className={cx('modal-buttons')}>
                             <button onClick={() => setShowDeleteConfirm(false)}>Cancel</button>
-                            <button onClick={(e) => { console.log('aaas') }}>Delete</button>
+                            <button onClick={(e) => handleDeleteAlbum(e)}>Delete</button>
                         </div>
                     </div>
                 </div>
             )}
 
         </div>
-
-
     );
 }
 

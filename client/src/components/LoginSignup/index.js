@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux'
 import { useFormik } from 'formik';
+import { Link } from 'react-router-dom'
 import * as Yup from 'yup';
 import classNames from "classnames/bind";
 import Tippy from '@tippyjs/react';
@@ -61,7 +62,7 @@ function LoginSigup() {
 
     // login
 
-    return (<div className={cx('wrapper')}>
+    return (<div className={cx('wrapper1')}>
 
         <div className="block__intro">
             <div className="block__messege">  <h1 style={{ color: 'black' }}>WELCOME TO WEBSITE</h1></div>
@@ -115,7 +116,7 @@ function LoginSigup() {
                 </div>
 
                 <div className={cx("forgot")}>
-                    <a href="/">Forgot password?</a>
+                    <Link to="./identify">Forgot password?</Link>
                 </div>
 
                 <button className={cx("btn-signup")} type='button' onClick={handleOnclick}>Create new account</button>

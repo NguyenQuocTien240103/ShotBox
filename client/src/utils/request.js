@@ -30,10 +30,17 @@ export const post = async (path, value = {}) => {
     const res = await request.post(path, value);
     return res.data;
 }
-export const get = async (path) => {
-    const res = await request.get(path);
+
+export const put = async (path, value = {}) => {
+    const res = await request.put(path, value);
     return res.data;
 }
+
+export const get = async (path, params = {}) => {
+    const res = await request.get(path, params);
+    return res.data;
+};
+
 export const deleteRequest = async (path) => {
     const res = await request.delete(path);
     return res.data;
