@@ -13,7 +13,9 @@ Before running the front-end, create a `.env` file in the root directory of the 
 
 
 CLOUD_NAME=your-cloudinary-cloud-name
+
 PRESET_NAME=your-upload-preset-name
+
 FOLDER_NAME=your-folder-name
 
 
@@ -43,11 +45,17 @@ If you don’t need a specific folder, leave this field blank.
 Before running the back-end, create a `.env` file in the root directory of the `server` folder and set the following environment variables:
 
 DATABASE=namedb
+
 DATABASE_HOST=localhost
+
 DATABASE_USER=root
+
 DATABASE_PASSWORD=
+
 JWT_SECRET=your-jwt-secret
+
 JWT_EXPIRE=your-jwt-expiry-time
+
 SENDGRID_API_KEY=your-sendgrid-api-key
 
 ## Setting Up the Project
@@ -63,8 +71,12 @@ Create .env files in the client and server directories using the provided exampl
 Start the Servers
 
 1.Start the back-end server:
+
 cd server
+
 npm start
 2.Start the front-end server:
+
 cd client
+
 npm start
