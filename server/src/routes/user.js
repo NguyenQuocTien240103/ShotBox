@@ -9,16 +9,22 @@ router.all("*", auth);
 
 router.get('/roleId', UserController.getRoleId);
 
+// change role 
+router.put('/roleId', UserController.ChangeRoleId);
+
+router.put('/capacity', UserController.UpdateUserCapacity);
+
 router.get('/account', UserController.getUser);
 
 router.get('/:id', UserController.getUserById);
 
-router.get('/', UserController.getAllUser)
+router.get('/', UserController.showAllUser)
 
 router.put('/password', UserController.updateUserPassword);
 
 router.put('/email', UserController.updateUserEmail);
 
 router.delete('/:id', UserController.deleteUser);
+
 
 export default router;

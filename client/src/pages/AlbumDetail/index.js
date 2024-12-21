@@ -1,70 +1,32 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import classNames from 'classnames/bind';
 import styles from './AlbumDetail.module.scss';
-import Menu from '../../components/Menu';
 import Button from '../../components/Button';
+import FormConfirm from '../../components/FormConfirm';
 import * as AlbumService from '../../services/albumService';
-import { useParams } from 'react-router-dom';
-const cx = classNames.bind(styles);
+import * as AlbumImageService from '../../services/albumImageService';
 
+import { useParams } from 'react-router-dom';
+import Header from './Header';
+import ImageCardList from '../../components/ImageCardList';
+import Toolbar from '../../components/Toolbar';
+import { useAlbumDetail } from '../../hooks/useAlbum';
+import { useImagesByAlbumId } from '../../hooks/useAlbumImage';
+const cx = classNames.bind(styles);
 function AlbumDetail() {
     const { id } = useParams();
-    const [activeIndex, setActiveIndex] = useState(null);
-    const [img, setImg] = useState([]);
-    const [test, setTest] = useState([]);
-    const menuRef = useRef(null);
-    const [album, setAlbum] = useState(null);
-    const [fixAlbum, setFixAlbum] = useState(false);
-    const [albumName, setAlbumName] = useState("");
-    const [description, setDescription] = useState("");
-    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-    useEffect(() => {
-        const showAlbumDetail = async () => {
-            try {
-                const res = await AlbumService.showAlbumDetail(id);
-                // console.log(res.data);
-                setAlbum(res.data);
-                setAlbumName(res.data.albumName);
-                setDescription(res.data.description);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-        showAlbumDetail();
-    }, [id]);
+    const { albumDetail } = useAlbumDetail(id);
+    const { img, setImg } = useImagesByAlbumId(id);
+    const [displayAlbums, setDisplayAlbums] = useState([]);
+    const [listIdImgChecked, setListIdImgChecked] = useState([]);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [showFormConfirm, setShowFormConfirm] = useState(false);
 
-    useEffect(() => {
-        const getImgFromAlbum = async () => {
-            try {
-                const res = await AlbumService.showImgFromAlbum(id);
-                setImg(res.data);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-        getImgFromAlbum();
-    }, [id]);
-
-    useEffect(() => {
-        if (activeIndex !== null) {
-            document.addEventListener('mousedown', handleClickOutside);
-        }
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [activeIndex]);
-
-    const handleOnclick = (index) => {
-        setActiveIndex(activeIndex === index ? null : index);
-    };
-
-    const handleClickOutside = (e) => {
-        if (menuRef.current && !menuRef.current.contains(e.target)) {
-            setActiveIndex(null);
-        }
-    };
-
-    const handleDownloadImg = async (ImageObj) => {
+    const handleDownloadImg = async (ImageObj, e) => {
+        if (isDeleting) return;
+        e.stopPropagation();
         const url = ImageObj.url;
         try {
             const response = await fetch(url);
@@ -79,142 +41,132 @@ function AlbumDetail() {
         }
     }
 
-    const handleDeleteImg = (ImageObj) => {
+    const handleDeleteImg = (ImageObj, e) => {
+        console.log(ImageObj.id);
+        if (isDeleting) return;
+        e.stopPropagation();
+        setIsDeleting(true);
+        // document.removeEventListener('mousedown', handleClickOutside);
         const idAlbumImg = ImageObj.id;
         const deleteImgFromAlbum = async () => {
             try {
-                const res = await AlbumService.deleteImgFromAlbum(idAlbumImg);
-                alert(res.message);
-                setImg((prev) => prev.filter((img) => img.id !== idAlbumImg));
+                const res = await AlbumImageService.deleteImgFromAlbum(idAlbumImg);
+                toast.success(`Success:${res.message}`, {
+                    position: "bottom-center",
+                    autoClose: 1000,
+                    onClose: () => {
+                        setImg((prev) => prev.filter((img) => img.id !== idAlbumImg));
+                        // setActiveIndex(null);
+                        setIsDeleting(false);
+                    },
+                });
             } catch (error) {
                 console.log(error);
+                toast.error(`Error:${error.respone.data.message}`, {
+                    position: "bottom-center",
+                    autoClose: 1000,
+                });
             }
         }
         deleteImgFromAlbum();
     }
 
-    const handleSave = async () => {
-        const updateAlbum = async () => {
-            const id = album.id;
-            const data = {
-                albumName: albumName,
-                description: description
-            }
-            try {
-                const res = await AlbumService.updateAlbum(id, data);
-                alert(res.message);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-        updateAlbum();
-        window.location.reload();
-    };
-
-    const handleCancel = () => {
-        setFixAlbum(false);
-        setAlbumName(album.albumName);
-        setDescription(album.description);
-    };
     const handleDeleteAlbum = (e) => {
         const deleteAlbum = async () => {
-            const id = album.id;
+            const id = albumDetail.id;
             try {
-                const res = await AlbumService.deleteAlbum(id);
+                await AlbumService.deleteAlbum(id);
+                window.location.href = "/album"
             } catch (error) {
                 console.log(error);
             }
         }
         deleteAlbum();
-        window.location.href = "/album"
     }
 
     const MenuItems = [
         {
             name: 'Download',
+            icon: 'fa-solid fa-download',
             handleOnclick: handleDownloadImg
         },
         {
             name: 'Delete',
+            icon: 'fa-solid fa-trash',
             handleOnclick: handleDeleteImg
         }
     ];
 
+    const handleDeleteMutipleImgFromAlbum = (e) => {
+        const fetchData = async () => {
+            try {
+                const res = await AlbumImageService.deleteMultipleImgFromAlbum(listIdImgChecked);
+                toast.success(`Success:${res.message}`, {
+                    position: "bottom-center",
+                    autoClose: 1000,
+                });
+                setListIdImgChecked([]);
+                setImg((prev) => prev.filter((img) => !listIdImgChecked.includes(img.id)));
+            } catch (error) {
+                console.log(error);
+                toast.success(`Error:${error.response.data.message}`, {
+                    position: "bottom-center",
+                    autoClose: 1000,
+                });
+            }
+        }
+        fetchData();
+    }
+
+    const menuToolbar = [
+        {
+            icon: 'fa-solid fa-trash',
+            handleOnclick: handleDeleteMutipleImgFromAlbum
+        }
+    ];
+    //////////////////////////////////
+    const handleOnclickCheckbox = (e, obj) => {
+        setListIdImgChecked((pre) => {
+            const isChecked = listIdImgChecked.includes(obj.id);
+            if (isChecked) {
+                return listIdImgChecked.filter(item => item !== obj.id);
+            }
+            else {
+                return [...pre, obj.id]
+            }
+        });
+    }
     return (
-        <div className={cx('demoo')}>
-            {album && (
-                <div className={cx('header')}>
-                    <div className={cx('aaa')}>
-                        {fixAlbum ? (
-                            <div className={cx('test1')}>
-                                <input
-                                    className={cx("album-control")}
-                                    type="text"
-                                    id="albumName"
-                                    name="albumName"
-                                    placeholder="Album Name"
-                                    value={albumName}
-                                    onChange={(e) => setAlbumName(e.target.value)}
-                                />
-                                <textarea
-                                    className={cx('txt-area')}
-                                    placeholder="Description"
-                                    name="description"
-                                    value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
-                                />
-                                <div>
-                                    <Button first onClick={handleCancel}>Cancel</Button>
-                                    <Button first onClick={handleSave}>Save</Button>
-                                </div>
-                            </div>
-                        ) : (
-                            <>
-                                <h2 className={cx('heading')}>{album.albumName}</h2>
-                                <span>{album.description}</span>
-                                <span> Created {album.createdAt}</span>
-                            </>
-                        )}
+        <div className={cx('wrapper')}>
+            <Header setShowFormConfirm={setShowFormConfirm} album={albumDetail} />
+            <ImageCardList
+                images={img}
+                displayAlbums={displayAlbums}
+                setDisplayAlbums={setDisplayAlbums}
+                menuItems={MenuItems}
+                isDeleting={isDeleting}
+                handleCheckboxChange={handleOnclickCheckbox}
+                listIdImgChecked={listIdImgChecked}
+            />
+            {
+                listIdImgChecked.length > 0 &&
+                <Toolbar
+                    menuToolbar={menuToolbar}
+                    listIdImgChecked={listIdImgChecked}
+                />
+            }
+            {showFormConfirm && (
+                <FormConfirm title={"Confirm"} content={"Do you want to delete this album?"}>
+                    <div className={cx('modal-buttons')}>
+                        <Button first onClick={() => setShowFormConfirm(false)} className={cx('btn-cancel')}>Cancel</Button>
+                        <Button first onClick={(e) => handleDeleteAlbum(e)} className={cx('btn-delete')}>Delete</Button>
                     </div>
-                    <div className={cx('icon')} onClick={() => setFixAlbum(true)}>
-                        <i className="fa-solid fa-pen" ></i>
-                    </div>
-                    <div className={cx('icon1')} onClick={() => setShowDeleteConfirm(true)}>
-                        <i className="fa-solid fa-trash"></i>
-                    </div>
-                </div>
-            )}
+                </FormConfirm>
+            )
+            }
+            <ToastContainer />
 
-            <div className={cx('demo')}>
-                {img.map((obj, index) => (
-                    <div key={index} className={cx('wrapper')}>
-                        <img src={obj.url} className={cx('img')} alt="img" />
-                        <div className={cx('hope')} ref={activeIndex === index ? menuRef : null}>
-                            <i className={`fa-solid fa-bars ${cx('test')}`} onClick={() => handleOnclick(index)}>
-                                {activeIndex === index && (
-                                    <Menu ImageObj={obj} setImg={setImg} MenuItems={MenuItems} test={test} setTest={setTest} />
-                                )}
-                            </i>
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-
-            {showDeleteConfirm && (
-                <div className={cx('modal')}>
-                    <div className={cx('modal-content')}>
-                        <h3>Confirm</h3>
-                        <p>Do you want to delete this album?</p>
-                        <div className={cx('modal-buttons')}>
-                            <button onClick={() => setShowDeleteConfirm(false)}>Cancel</button>
-                            <button onClick={(e) => handleDeleteAlbum(e)}>Delete</button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-        </div>
+        </div >
     );
 }
 

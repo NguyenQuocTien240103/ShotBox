@@ -1,69 +1,64 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './DeletedImages.module.scss';
-import Button from '../../components/Button';
-import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import * as deletedImgService from '../../services/deletedImgService';
-import Menu from '../../components/Menu';
+import ImageCardList from '../../components/ImageCardList';
+import Toolbar from '../../components/Toolbar';
+import useDeletedImages from '../../hooks/useDeletedImages';
+
 const cx = classNames.bind(styles);
 
 function DeletedImages() {
-    const [deletedImg, setDeleteImg] = useState([]);
-    const [activeIndex, setActiveIndex] = useState(null);
-    const [test, setTest] = useState([]);
-    const menuRef = useRef(null);
+    const { deletedImg, setDeleteImg } = useDeletedImages();
+    const [listIdImgChecked, setListIdImgChecked] = useState([]);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [displayAlbums, setDisplayAlbums] = useState([]);
 
-    //
-    useEffect(() => {
-        const getDeletedImg = async () => {
-            try {
-                const res = await deletedImgService.showDeletedImages();
-                setDeleteImg(res.data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-        getDeletedImg();
-    }, []);
-    // handle when we mousedown
-    useEffect(() => {
-        if (activeIndex !== null) {
-            document.addEventListener('mousedown', handleClickOutside);
-        }
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [activeIndex]);
-
-    const handleOnclick = (index) => {
-        setActiveIndex(activeIndex === index ? null : index);
-    };
-
-    const handleClickOutside = (e) => {
-        if (menuRef.current && !menuRef.current.contains(e.target)) {
-            setActiveIndex(null);
-        }
-    };
     const handleRestore = (objDeletedImage, e) => {
+        if (isDeleting) return;
+        e.stopPropagation();
+        setIsDeleting(true);
+        // document.removeEventListener('mousedown', handleClickOutside);
         const id = objDeletedImage.id;
         const restoreImg = async () => {
             try {
                 const res = await deletedImgService.restoreDeletedImage(id);
-                window.alert(res.message);
-                window.location.reload();
+                toast.success(`Success:${res.message}`, {
+                    position: "bottom-center",
+                    autoClose: 500,
+                    onClose: () => {
+
+                        window.location.reload();
+                    },
+                });
             } catch (error) {
                 console.log(error);
+                toast.success(`Error:${error.respone.data.message}`, {
+                    position: "bottom-center",
+                    autoClose: 500,
+                });
             }
         }
         restoreImg();
     }
     const handleDeleteImg = (objDeletedImage, e) => {
+        if (isDeleting) return;
+        e.stopPropagation();
+        setIsDeleting(true);
+        // document.removeEventListener('mousedown', handleClickOutside);
         const id = objDeletedImage.id;
         const removeImg = async () => {
             try {
                 const res = await deletedImgService.removeDeletedImage(id);
-                alert(res.message);
-                window.location.reload();
+                toast.success(`Success:${res.message}`, {
+                    position: "bottom-center",
+                    autoClose: 500,
+                    onClose: () => {
+                        window.location.reload();
+                    },
+                });
             } catch (error) {
                 console.log(error)
             }
@@ -73,33 +68,99 @@ function DeletedImages() {
     const MenuItems = [
         {
             name: 'Restore',
+            icon: 'fa-solid fa-arrows-rotate',
             handleOnclick: handleRestore
         },
         {
             name: 'Delete',
+            icon: 'fa-solid fa-trash',
             handleOnclick: handleDeleteImg
         }
     ];
+
+    const handleRestoneMulitple = (e) => {
+        const fetchData = async () => {
+            try {
+                const res = await deletedImgService.restoreMultipleDeletedImage(listIdImgChecked);
+                toast.success(`Success:${res.message}`, {
+                    position: "bottom-center",
+                    autoClose: 1000,
+                });
+                setListIdImgChecked([]);
+                setDeleteImg((prev) => prev.filter((deleteImg) => !listIdImgChecked.includes(deleteImg.id)));
+            } catch (error) {
+                console.log(error);
+                toast.success(`Error:${error.response.data.message}`, {
+                    position: "bottom-center",
+                    autoClose: 1000,
+                });
+            }
+        }
+        fetchData();
+    }
+
+    const handleDelMulitple = (e) => {
+        const fetchData = async () => {
+            try {
+                const res = await deletedImgService.removeMultipleDeletedImage(listIdImgChecked);
+                toast.success(`Success:${res.message}`, {
+                    position: "bottom-center",
+                    autoClose: 1000,
+                });
+                setListIdImgChecked([]);
+                setDeleteImg((prev) => prev.filter((deleteImg) => !listIdImgChecked.includes(deleteImg.id)));
+            } catch (error) {
+                console.log(error);
+                toast.success(`Error:${error.response.data.message}`, {
+                    position: "bottom-center",
+                    autoClose: 1000,
+                });
+            }
+        }
+        fetchData();
+    }
+    const menuToolbar = [
+        {
+            icon: 'fa-solid fa-arrows-rotate',
+            handleOnclick: handleRestoneMulitple
+        },
+        {
+            icon: 'fa-solid fa-trash',
+            handleOnclick: handleDelMulitple
+        }
+    ];
+    ////////////////////////////////////////
+    const handleOnclickCheckbox = (e, deletedImage) => {
+        setListIdImgChecked((pre) => {
+            const isChecked = listIdImgChecked.includes(deletedImage.id);
+            if (isChecked) {
+                return listIdImgChecked.filter(item => item !== deletedImage.id);
+            }
+            else {
+                return [...pre, deletedImage.id]
+            }
+        });
+    }
+
     return (
-        <div className={cx('demo')}>
-            {deletedImg.map((obj, index) => (
-                <div key={index} className={cx('wrapper')}>
-                    <img
-                        src={obj.url}
-                        className={cx('img')}
-                        alt="img"
-                    />
-                    <div className={cx('hope')} ref={activeIndex === index ? menuRef : null}>
-                        <i className={`fa-solid fa-bars ${cx('test')}`} onClick={() => handleOnclick(index)}>
-                            {activeIndex === index && (
-
-                                <Menu ImageObj={obj} MenuItems={MenuItems} test={test} setTest={setTest} />
-
-                            )}
-                        </i>
-                    </div>
-                </div>
-            ))}
+        <div className={cx('wrapper')}>
+            <ImageCardList
+                images={deletedImg}
+                displayAlbums={displayAlbums}
+                setDisplayAlbums={setDisplayAlbums}
+                menuItems={MenuItems}
+                isDeleting={isDeleting}
+                handleCheckboxChange={handleOnclickCheckbox}
+                listIdImgChecked={listIdImgChecked}
+            />
+            {
+                listIdImgChecked.length > 0 &&
+                <Toolbar
+                    menuToolbar={menuToolbar}
+                    listIdImgChecked={listIdImgChecked}
+                />
+            }
+            <ToastContainer />
         </div>
     );
 }

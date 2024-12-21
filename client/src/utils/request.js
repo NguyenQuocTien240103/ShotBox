@@ -1,5 +1,12 @@
 import axios from 'axios';
 // config request
+// const request = axios.create({
+//     baseURL: 'http://192.168.138.241:8080',
+//     headers: {
+//         'Content-Type': 'application/json',
+//     }
+// })
+
 const request = axios.create({
     baseURL: 'http://localhost:8080',
     headers: {
@@ -36,8 +43,8 @@ export const put = async (path, value = {}) => {
     return res.data;
 }
 
-export const get = async (path, params = {}) => {
-    const res = await request.get(path, params);
+export const get = async (path, value = {}) => {
+    const res = await request.get(path, value);
     return res.data;
 };
 
