@@ -1,16 +1,24 @@
 import express from 'express';
 import ImagesController from '../app/controllers/ImagesController.js'
 import auth from "../middleware/auth.js";
-const router = express.Router();
-router.all("*", auth);
 
+class ImagesRoute {
+  constructor() {
+    this.router = express.Router();
+    this.imagesController = new ImagesController();
+    this.init();
+  }
 
-router.get('/', ImagesController.getAllImages);
+  init() {
+    this.router.get('/', auth, (req, res) => this.imagesController.getAllImages(req,res));
+    this.router.post('/', auth, (req, res) => this.imagesController.postImages(req,res));
+    this.router.post('/delete/multiple', auth, (req, res) => this.imagesController.deleteMultiple(req,res));
+    this.router.delete('/:id', auth, (req, res) => this.imagesController.deleteImages(req,res));
+  }
 
-router.post('/', ImagesController.postImages);
+  getRouter() {
+    return this.router;
+  }
+}
 
-router.post('/delete/multiple', ImagesController.deleteMultiple);
-
-router.delete('/:id', ImagesController.deleteImages);
-
-export default router;
+export default ImagesRoute;

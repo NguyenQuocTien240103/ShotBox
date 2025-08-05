@@ -8,7 +8,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import * as capacityPackageService from '../../services/capacityPackageService';
 import * as Yup from 'yup';
+
 const cx = classNames.bind(styles);
+
 function FormCapacity({ title, handleUnmount, capacityDetail, isUpdate }) {
     const text = title.split(' ')[0];
     const validationSchema = Yup.object({

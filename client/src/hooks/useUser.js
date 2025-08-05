@@ -3,12 +3,13 @@ import * as userService from '../services/userService';
 export const useAllUser = () => {
     const [users, setUsers] = useState([]);
     const [allUser, setAllUser] = useState([]);
+    
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const res = await userService.getAllUsers();
-                setUsers(res);
-                setAllUser(res);
+                setUsers(res.data);
+                setAllUser(res.data);
             } catch (error) {
                 console.error("Failed to fetch data:", error);
             }

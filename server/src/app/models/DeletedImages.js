@@ -1,50 +1,52 @@
-import db from '../../config/database.js';
+// models/DeletedImages.js
+import { getDB } from '../../config/database.js';
 
-const DeletedImages = {
-    getAllDeletedImages: async (idUser) => {
+class DeletedImages {
+    constructor() {
+        this.db = getDB();
+    }
+
+    async getAllDeletedImages(idUser) {
         try {
-            const query = 'SELECT * FROM deleted_images WHERE deletedBy = ?';
-            const [rows] = await db.query(query, [idUser]);
+            const query = `SELECT * FROM deleted_images WHERE deletedBy = ?`;
+            const [rows] = await this.db.query(query, [idUser]);
             return rows;
         } catch (error) {
-            console.error('Error fetching deleted images:', error);
-            throw error; // Re-throw the error so it can be handled further up if needed
+            throw error;
         }
-    },
-    getDeletedImageById: async (id) => {
+    }
+
+    async getDeletedImageById(id) {
         try {
-            const query = 'SELECT * FROM deleted_images WHERE id = ?';
-            const [rows] = await db.query(query, [id]);
+            const query = `SELECT * FROM deleted_images WHERE id = ?`;
+            const [rows] = await this.db.query(query, [id]);
             return rows[0];
         } catch (error) {
-            console.error('Error fetching deleted images:', error);
-            throw error; // Re-throw the error so it can be handled further up if needed
+            throw error;
         }
-    },
+    }
 
-    // Hàm thêm ảnh vào bảng deleted_images
-    create: async (data) => {
-        const { id, userId, fileName, fileSize, fileWidth, fileHeight, fileFormat, url } = data;
+    async create(data) {
+        const { userId, fileName, fileSize, fileWidth, fileHeight, fileFormat, url } = data;
         try {
             const query = `
-                INSERT INTO Deleted_Images ( url, fileName, fileSize, fileWidth, fileHeight, fileFormat, deletedBy)
-                VALUES ( ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO deleted_images (url, fileName, fileSize, fileWidth, fileHeight, fileFormat, deletedBy)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
             `;
-            const [result] = await db.query(query, [url, fileName, fileSize, fileWidth, fileHeight, fileFormat, userId]);
-
+            const [result] = await this.db.query(query, [url, fileName, fileSize, fileWidth, fileHeight, fileFormat, userId]);
             return result.insertId;
         } catch (error) {
-            console.error("Error inserting deleted image:", error);
+            throw error;
         }
-    },
-    deleteById: async (id) => {
+    }
+
+    async deleteById(id) {
         try {
-            const query = 'DELETE FROM deleted_images WHERE id = ?';
-            const [result] = await db.query(query, [id]);
+            const query = `DELETE FROM deleted_images WHERE id = ?`;
+            const [result] = await this.db.query(query, [id]);
             return result.affectedRows;
         } catch (error) {
-            console.error("Error deleting image:", error);
-            throw new Error("Failed to delete image. Please try again.");
+            throw error;
         }
     }
 }

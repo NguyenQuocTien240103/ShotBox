@@ -1,94 +1,86 @@
-import db from '../../config/database.js'
-const Album = {
-    getAllAlbums: async (userId) => {
+import { getDB } from '../../config/database.js';
+
+class Album {
+    constructor() {
+        this.db = getDB();
+    }
+
+    async getAllAlbums(userId) {
         try {
             const query = 'SELECT * FROM album WHERE userId = ?';
-            const [rows] = await db.query(query, [userId]);
+            const [rows] = await this.db.query(query, [userId]);
             return rows;
         } catch (error) {
-            console.error("Error fetching images:", error); // Log lỗi chi tiết
-            throw new Error("Unable to fetch images.");
+            throw error;
         }
-    },
-    findAlbumByUrlParams: async (urlParams) => {
+    }
+
+    async findAlbumByUrlParams(urlParams) {
         try {
             const query = 'SELECT * FROM album WHERE location = ?';
-            const [rows] = await db.query(query, [urlParams]);
+            const [rows] = await this.db.query(query, [urlParams]);
             return rows[0];
         } catch (error) {
-            console.error("Error fetching images:", error); // Log lỗi chi tiết
-            throw new Error("Unable to fetch images.");
+            throw error;
         }
-    },
-    isAlbumNameExists: async (albumName, userId) => {
+    }
+
+    async isAlbumNameExists(albumName, userId) {
         try {
             const query = 'SELECT COUNT(*) AS count FROM album WHERE albumName = ? AND userId = ?';
-            const [rows] = await db.query(query, [albumName, userId]);
-            return rows[0].count > 0; // Trả về true nếu có ít nhất 1 album trùng tên
+            const [rows] = await this.db.query(query, [albumName, userId]);
+            return rows[0].count > 0;
         } catch (error) {
-            console.error("Error checking album name:", error);
-            throw new Error("Unable to check album name.");
+            throw error;
         }
-    },
-    create: async (data, userId) => {
-        const albumName = data.albumName;
-        const description = data.description;
-        const location = data.location;
+    }
+
+    async create(data, userId) {
+        const { albumName, description, location } = data;
         try {
-            const query = 'INSERT INTO album (userId, albumName, description,location) VALUES (?, ?, ?, ?)';
-            const [result] = await db.query(query, [userId, albumName, description, location]);
+            const query = 'INSERT INTO album (userId, albumName, description, location) VALUES (?, ?, ?, ?)';
+            const [result] = await this.db.query(query, [userId, albumName, description, location]);
             return result.insertId;
         } catch (error) {
-            console.error(`Error inserting album`, error);
-            throw new Error('Unable to insert album into the database.');
+            console.error("Error inserting album:", error);
+            throw new Error("Unable to insert album.");
         }
-    },
-    isAlbumNameExists: async (albumName, userId) => {
+    }
+
+    async update(id, data) {
+        const { albumName, description } = data;
         try {
-            const query = 'SELECT COUNT(*) AS count FROM album WHERE albumName = ? AND userId = ?';
-            const [rows] = await db.query(query, [albumName, userId]);
-            return rows[0].count > 0; // Trả về true nếu có ít nhất 1 album trùng tên
-        } catch (error) {
-            console.error("Error checking album name:", error);
-            throw new Error("Unable to check album name.");
-        }
-    },
-    update: async (id, data) => {
-        try {
-            const { albumName, description } = data;
             const query = 'UPDATE album SET albumName = ?, description = ? WHERE id = ?';
-            const [result] = await db.query(query, [albumName, description, id]);
+            const [result] = await this.db.query(query, [albumName, description, id]);
             return result.affectedRows;
         } catch (error) {
-            console.error('Error updating album:', error);
-            throw new Error('Failed to update album');
+            throw error;
         }
-    },
-    delete: async (id) => {
+    }
+
+    async delete(id) {
         try {
             const query = 'DELETE FROM album WHERE id = ?';
-            const [result] = await db.query(query, [id]);
+            const [result] = await this.db.query(query, [id]);
             return result.affectedRows;
         } catch (error) {
-            console.error("Error deleting image:", error);
-            throw new Error("Failed to delete image. Please try again.");
+            throw error;
         }
-    },
-    checkDuplicateAlbumName: async (albumName, id) => {
+    }
+
+    async checkDuplicateAlbumName(id, albumName, userId) {
         try {
             const query = `
                 SELECT COUNT(*) as count 
                 FROM album 
-                WHERE albumName = ? AND id != ?
+                WHERE albumName = ? AND userId = ? AND id != ?
             `;
-            const [rows] = await db.query(query, [albumName, id]);
-            return rows[0].count > 0; // Nếu số lượng lớn hơn 0, nghĩa là đã tồn tại album
+        const [rows] = await this.db.query(query, [albumName, userId, id]);
+        return rows[0].count > 0;
         } catch (error) {
-            console.error("Error checking duplicate album name:", error);
-            throw new Error("Failed to check duplicate album name.");
+            throw error;
         }
-    },
-
+    }
 }
 
 export default Album;

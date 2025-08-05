@@ -3,7 +3,9 @@ import styles from './Capacity.module.scss';
 import CapacityManager from '../../../components/Manager/CapacityManager';
 import Chart from '../../../components/Chart'
 import { useAllUser } from '../../../hooks/useUser';
+
 const cx = classNames.bind(styles);
+
 function Capacity() {
     const { users } = useAllUser();
     return (

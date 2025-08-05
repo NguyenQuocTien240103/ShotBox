@@ -1,6 +1,13 @@
-import db from '../../config/database.js'
-const HistoryUpgrade = {
-    getAllHistoryUpgrade: async () => {
+import { getDB } from '../../config/database.js';
+
+class HistoryUpgrade {
+    constructor() {
+        this.statusPending = 'pending';
+        this.statusSuccess = 'success';
+        this.db = getDB();
+    }
+
+    async getAllHistoryUpgrade() {
         try {
             const query = `
                 SELECT
@@ -15,15 +22,14 @@ const HistoryUpgrade = {
                 JOIN history_upgrade ON users.id = history_upgrade.userId
                 JOIN capacity_package ON history_upgrade.capacityPackageId = capacity_package.id
             `;
-            const [rows] = await db.query(query);
+            const [rows] = await this.db.query(query);
             return rows;
         } catch (error) {
-            console.error("Error retrieving images from album:", error);
-            throw new Error("Unable to retrieve images. Please try again later.");
+            throw error;
         }
-    },
-    getHistoryUpgradePading: async () => {
-        const status = 'pending';
+    }
+
+    async getHistoryUpgradePending() {
         try {
             const query = `
                 SELECT
@@ -39,14 +45,14 @@ const HistoryUpgrade = {
                 JOIN capacity_package ON history_upgrade.capacityPackageId = capacity_package.id
                 WHERE history_upgrade.status = ?
             `;
-            const [rows] = await db.query(query, [status]);
+            const [rows] = await this.db.query(query, [this.statusPending]);
             return rows;
         } catch (error) {
-            console.error("Error retrieving images from album:", error);
-            throw new Error("Unable to retrieve images. Please try again later.");
+            throw error;
         }
-    },
-    getByUserIdAndStatus: async (userId, status) => {
+    }
+
+    async getByUserIdAndStatus(userId, status) {
         try {
             const query = `
                 SELECT
@@ -62,54 +68,53 @@ const HistoryUpgrade = {
                 JOIN capacity_package ON history_upgrade.capacityPackageId = capacity_package.id
                 WHERE history_upgrade.status = ? AND history_upgrade.userId = ?
             `;
-            const [rows] = await db.query(query, [status, userId]);
+            const [rows] = await this.db.query(query, [status, userId]);
             return rows;
         } catch (error) {
-            console.error("Error retrieving images from album:", error);
-            throw new Error("Unable to retrieve images. Please try again later.");
+            throw error;
         }
-    },
-    checkPendingByUserId: async (userId) => {
-        const status = 'pending';
+    }
+
+    async checkPendingByUserId(userId) {
         try {
-            const query = 'SELECT * FROM history_upgrade WHERE userId = ? AND status = ?'; // Sửa 'WHEN' thành 'WHERE'
-            const [rows] = await db.query(query, [userId, status]);
+            const query = `
+                SELECT * FROM history_upgrade 
+                WHERE userId = ? AND status = ?
+            `;
+            const [rows] = await this.db.query(query, [userId, this.statusPending]);
             return rows;
         } catch (error) {
-            console.error(
-                `Error querying the history_upgrade table with userId: ${userId}, status: ${status}`,
-                error
-            );
-            throw new Error('Unable to fetch data from the database. Please try again later.');
+            throw error;
         }
-    },
-    create: async (data, userId) => {
+    }
+
+    async create(data, userId) {
         const { capacityPackageId } = data;
-        const status = 'pending';
         try {
-            const query = 'INSERT INTO history_upgrade (userId, capacityPackageId, status) VALUES (?, ?, ?)';
-            const [result] = await db.query(query, [userId, capacityPackageId, status]);
+            const query = `
+                INSERT INTO history_upgrade (userId, capacityPackageId, status)
+                VALUES (?, ?, ?)
+            `;
+            const [result] = await this.db.query(query, [userId, capacityPackageId, this.statusPending]);
             return result.insertId;
         } catch (error) {
-            console.error(
-                `Error inserting into history_upgrade table with data: ${JSON.stringify(data)}, userId: ${userId}`,
-                error
-            );
-            throw new Error('Unable to insert data into the database. Please try again later.');
+            throw error;
         }
-    },
-    updateStatusByUserId: async (userId) => {
-        const statusSuccess = 'success';
-        const statusPending = 'pending';
+    }
+
+    async updateStatusByUserId(userId) {
         try {
-            const query = 'UPDATE history_upgrade SET status = ? WHERE userId = ? AND status = ? ';
-            const [result] = await db.query(query, [statusSuccess, userId, statusPending]);
-            return result.affectedRows;
+            const query = `
+                UPDATE history_upgrade 
+                SET status = ? 
+                WHERE userId = ? AND status = ?
+            `;
+            const [result] = await this.db.query(query, [this.statusSuccess, userId, this.statusPending]);
+            return result.affectedRows > 0;
         } catch (error) {
-            console.error('Error updating album:', error);
-            throw new Error('Failed to update album');
+            throw error;
         }
-    },
+    }
 }
 
 export default HistoryUpgrade;

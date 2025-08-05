@@ -1,5 +1,6 @@
 import styles from './FormConfirm.module.scss';
 import classNames from 'classnames/bind';
+
 const cx = classNames.bind(styles);
 
 function FormConfirm({ children, title, content }) {

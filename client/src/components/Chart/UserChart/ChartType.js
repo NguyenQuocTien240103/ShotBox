@@ -7,6 +7,7 @@ const component = {
     ChartBar: Bar,
     ChartLine: Line,
 };
+
 const getDaysInMonth = (year, month, listDays) => {
     const daysInMonth = new Date(year, month, 0).getDate();
     for (let i = 0; i < daysInMonth; i++) {
@@ -14,6 +15,7 @@ const getDaysInMonth = (year, month, listDays) => {
     }
     return listDays;
 }
+
 const getMapData = (items, labels, year, month) => {
     const map = new Map();
     if (labels.length === 12) {
@@ -51,6 +53,7 @@ const getMapData = (items, labels, year, month) => {
     });
     return map;
 }
+
 const convertMaptoArr = (mapData, labels) => {
     const data = [];
     if (mapData.size !== labels.length) {
@@ -71,6 +74,7 @@ const convertMaptoArr = (mapData, labels) => {
     }
     return data;
 }
+
 function ChartType({ chartType, items, year, month }) {
     const Comp = component[chartType];
 

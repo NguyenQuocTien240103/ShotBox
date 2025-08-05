@@ -2,11 +2,13 @@ import { useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import classNames from "classnames/bind";
-import styles from './Signup.module.scss'
-import * as registerService from '../../services/registerService';
+import styles from './FormRegister.module.scss'
+import * as authService from '../../services/authService'
 import Input from "../Input";
+
 const cx = classNames.bind(styles)
-function Signup({ setShowFormSignup }) {
+
+function FormRegister({ setShowFormRegister }) {
 
     const validationSchema = Yup.object({
         username: Yup.string()
@@ -35,7 +37,7 @@ function Signup({ setShowFormSignup }) {
             console.log(value);
             const fetchApi = async () => {
                 try {
-                    const res = await registerService.register(value);
+                    const res = await authService.register(value);
                     if (res) {
                         window.location.reload();
                     }
@@ -52,16 +54,16 @@ function Signup({ setShowFormSignup }) {
     }, [formik.values.username])
 
     const handleOnclick = (e) => {
-        setShowFormSignup(false)
+        setShowFormRegister(false)
     }
 
     return (
         <div className={cx('wrapper')}>
-            <form action="" className={cx("signup")} onSubmit={formik.handleSubmit}>
+            <form action="" className={cx("register")} onSubmit={formik.handleSubmit}>
                 <i className={`fa-solid fa-xmark ${cx('xmark')}`} onClick={handleOnclick}></i>
-                <h2 className={cx("signup-title")}>CREATE AN ACCOUNT </h2>
+                <h2 className={cx("register-title")}>CREATE AN ACCOUNT </h2>
                 <div className={cx('group-control')}>
-                    <Input className={cx("signup-control")}
+                    <Input className={cx("register-control")}
                         type="text"
                         id="username"
                         name="username"
@@ -74,7 +76,7 @@ function Signup({ setShowFormSignup }) {
                 </div>
 
                 <div className={cx('group-control')}>
-                    <Input className={cx("signup-control")}
+                    <Input className={cx("register-control")}
                         type="text"
                         id="email"
                         name="email"
@@ -88,7 +90,7 @@ function Signup({ setShowFormSignup }) {
                 </div>
 
                 <div className={cx('group-control')}>
-                    <Input className={cx("signup-control")}
+                    <Input className={cx("register-control")}
                         type="password"
                         id="password"
                         name="password"
@@ -102,7 +104,7 @@ function Signup({ setShowFormSignup }) {
                 </div>
 
                 <div className={cx('group-control')}>
-                    <Input className={cx("signup-control")}
+                    <Input className={cx("register-control")}
                         type="password"
                         id="password_confirmation"
                         name="password_confirmation"
@@ -114,9 +116,9 @@ function Signup({ setShowFormSignup }) {
                         error={formik.touched.password_confirmation && formik.errors.password_confirmation ? formik.errors.password_confirmation : null}
                     />
                 </div>
-                <button className={cx("signup-submit")} type='submit'>Register</button>
+                <button className={cx("register-submit")} type='submit'>Register</button>
             </form>
         </div>
     );
 }
-export default Signup;
+export default FormRegister;

@@ -8,6 +8,7 @@ import { useHistoryUpgradeSuccess } from '../../hooks/useHistoryUpgrade';
 import { useAllCapacityPackage } from '../../hooks/useCapacity';
 
 const cx = classnames.bind(styles);
+
 function UpgradeCapacity() {
     const { upgradeSucess } = useHistoryUpgradeSuccess();
     const { capacityPackages } = useAllCapacityPackage();

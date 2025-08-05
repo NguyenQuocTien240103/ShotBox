@@ -7,14 +7,15 @@ import classNames from 'classnames/bind';
 import Camera from '../../components/Camera';
 import Button from '../../components/Button';
 import * as ImageService from '../../services/imageService';
+
 const cx = classNames.bind(styles);
 
 function Webcam() {
     const [capturedImage, setCapturedImage] = useState(null);
     const handleAddImages = async () => {
-        const CLOUD_NAME = process.env.CLOUD_NAME;
-        const PRESET_NAME = process.env.PRESET_NAME;
-        const FOLDER_NAME = process.env.FOLDER_NAME;
+        const CLOUD_NAME  = process.env.REACT_APP_CLOUD_NAME;
+        const PRESET_NAME = process.env.REACT_APP_PRESET_NAME;
+        const FOLDER_NAME = process.env.REACT_APP_FOLDER_NAME;
         const api = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
         const formData = new FormData();

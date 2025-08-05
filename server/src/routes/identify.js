@@ -1,11 +1,21 @@
 import express from 'express';
 import IdentifyController from '../app/controllers/IdentifyController.js'
-const router = express.Router();
 
-router.get('/:id', IdentifyController.findIdentify);
+class IdentifyRoute {
+  constructor() {
+    this.router = express.Router();
+    this.identifyController = new IdentifyController();
+    this.init();
+  }
 
-router.post('/', IdentifyController.postIdentify);
+  init() {
+    this.router.get('/:id', (req, res) => this.identifyController.findIdentify(req,res));
+    this.router.put('/', (req,res) => this.identifyController.confirmNewPassword(req,res));
+  }
 
-router.put('/', IdentifyController.confirmNewPassword);
+  getRouter() {
+    return this.router;
+  }
+}
 
-export default router;
+export default IdentifyRoute;

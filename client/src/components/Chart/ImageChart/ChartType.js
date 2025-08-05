@@ -17,6 +17,7 @@ const getDaysInMonth = (year, month, listDays) => {
 }
 const getMapData = (items, labels, year, month) => {
     const map = new Map();
+
     if (labels.length === 12) {
         items.forEach(item => {
             const date = new Date(item.uploadDate);
@@ -33,6 +34,7 @@ const getMapData = (items, labels, year, month) => {
         });
         return map;
     }
+
     items.forEach(item => {
         const date = new Date(item.uploadDate);
         const getFullYear = date.getFullYear();
@@ -52,6 +54,7 @@ const getMapData = (items, labels, year, month) => {
     });
     return map;
 }
+
 const convertMaptoArr = (mapData, labels) => {
     const data = [];
     if (mapData.size !== labels.length) {

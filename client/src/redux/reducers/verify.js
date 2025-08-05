@@ -3,6 +3,7 @@ const initialState = {
     email: '',
     code: '',
 }
+
 const vertifyReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'USERNAME': {

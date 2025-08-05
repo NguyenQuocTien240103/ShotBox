@@ -1,83 +1,88 @@
 import Album from '../models/Album.js';
-import AlbumImage from '../models/AlbumImage.js';
+import AlbumImages from '../models/AlbumImages.js';
 
 class AlbumController {
+    constructor() {
+        this.albumModel = new Album();
+        this.albumImagesModel = new AlbumImages();
+    }
+
     async showAllAlbums(req, res) {
         try {
             const { id } = req.user;
-            const albums = await Album.getAllAlbums(id);
-            return res.status(200).json({ data: albums });
+            const albums = await this.albumModel.getAllAlbums(id);
+            return res.status(200).json({ data: albums, message: "Successfully got all albums" });
         } catch (error) {
-            console.error("Error fetching images:", error); // Log lỗi chi tiết
-            return res.status(500).json({ error: "An error occurred while fetching images." });
+            console.error("Error:", error.message);
+            return res.status(500).json({ message: "Failed to get albums" });
         }
     }
+
     async showAlbumDetail(req, res) {
         try {
             const urlParams = req.params.id;
-            const albums = await Album.findAlbumByUrlParams(urlParams);
-            return res.status(200).json({ data: albums });
+            const albums = await this.albumModel.findAlbumByUrlParams(urlParams);
+            return res.status(200).json({ data: albums, message: "Successfully got album details" });
         } catch (error) {
-            console.error("Error fetching images:", error); // Log lỗi chi tiết
-            return res.status(500).json({ error: "An error occurred while fetching images." });
+            console.error("Error:", error.message);
+            return res.status(500).json({ message: "Failed to get album details" });
         }
     }
+
     async postAlbum(req, res) {
         try {
             const data = req.body;
             const albumName = data.albumName;
             const { id } = req.user;
-            const existsNameAlbum = await Album.isAlbumNameExists(albumName, id);
-            if (!existsNameAlbum) {
-                await Album.create(data, id);
-                return res.status(201).json({ message: 'Create album successfully' });
-            } else {
-                return res.status(409).json({ message: 'Album name already exists' });
-            }
+            const existsNameAlbum = await this.albumModel.isAlbumNameExists(albumName, id);
+
+            if (existsNameAlbum) return res.status(409).json({ message: "Album name already exists" });
+
+            await this.albumModel.create(data, id);
+            return res.status(201).json({ message: "Album created successfully" });
         } catch (error) {
-            console.error('Error uploading album:', error); // Log lỗi chi tiết
-            return res.status(500).json({ message: 'Internal Server Error' });
+            console.error("Error:", error.message);
+            return res.status(500).json({ message: "Failed to create album" });
         }
     }
+
     async updateAlbum(req, res) {
         try {
-            const id = req.params.id;
+            const { id } = req.user;
+            const albumId = req.params.id;
             const { albumName, description } = req.body;
-            //Hàm check xem đã có tên chưa 
-            const isDuplicate = await Album.checkDuplicateAlbumName(albumName, id);
-            if (isDuplicate) {
-                return res.status(400).json({ message: 'AlbumName already exists.' });
-            }
-            // Thực hiện cập nhật
-            const affectedRows = await Album.update(id, { albumName, description });
-            if (affectedRows === 0) {
-                return res.status(404).json({ message: 'Album not found or no changes made.' });
-            }
-            return res.status(200).json({ message: 'Album updated successfully.' });
+            const isDuplicate = await this.albumModel.checkDuplicateAlbumName(albumId, albumName, id);
+
+            if (isDuplicate) return res.status(400).json({ message: "Album name already exists" });
+
+            const affectedRows = await this.albumModel.update(albumId, { albumName, description });
+
+            if (!affectedRows) return res.status(404).json({ message: "Album not found or no changes made" });
+
+            return res.status(200).json({ message: "Album updated successfully" });
         } catch (error) {
-            console.error('Error updating album:', error);
-            return res.status(500).json({ error: 'Internal Server Error' });
+            console.error("Error:", error.message);
+            return res.status(500).json({ message: "Failed to update album" });
         }
     }
+
     async deleteAlbum(req, res) {
         const id = req.params.id;
         try {
-            const idAlbumExists = await AlbumImage.findByIdAlbum(id);
-            if (idAlbumExists) {
-                await AlbumImage.deleteByAlbumId(id);
-            }
-            const result = await Album.delete(id);
+            const idAlbumExists = await this.albumImagesModel.findByIdAlbum(id);
 
-            if (result) {
-                return res.status(200).json({ message: `Album với ID ${id} đã được xóa` });
-            } else {
-                return res.status(404).json({ message: 'Album không tìm thấy' });
-            }
+            if (idAlbumExists) await this.albumImagesModel.deleteByAlbumId(id);
+
+            const result = await this.albumModel.delete(id);
+
+            if (!result) return res.status(404).json({ message: "Album not found or already deleted" });
+
+            return res.status(200).json({ message: "Album deleted successfully" });
         } catch (error) {
-            console.error("Lỗi khi xóa album:", error);
-            return res.status(500).json({ error: 'Lỗi khi xóa album' });
+            console.error("Error:", error.message);
+            return res.status(500).json({ message: "Failed to delete album" });
         }
     }
 }
 
-export default new AlbumController();
+export default AlbumController;

@@ -5,6 +5,7 @@ import styles from './EmailVerifyForm.module.scss';
 import * as Yup from 'yup';
 import Input from '../../Input'
 import * as identifyService from '../../../services/identifyService.js'
+
 const cx = classNames.bind(styles);
 
 function EmailVerifyForm({ setShowEmailVerifyForm }) {
@@ -42,6 +43,7 @@ function EmailVerifyForm({ setShowEmailVerifyForm }) {
             }
         }
     })
+
     return (<div className={cx('wrapper')}>
         <form className={cx("form")} onSubmit={formik.handleSubmit}>
             <h2 className={cx("title")}>Find your email </h2>

@@ -3,6 +3,7 @@ import * as deletedImgService from '../services/deletedImgService';
 
 function useDeletedImages() {
     const [deletedImg, setDeleteImg] = useState([]);
+    
     useEffect(() => {
         const getDeletedImg = async () => {
             try {

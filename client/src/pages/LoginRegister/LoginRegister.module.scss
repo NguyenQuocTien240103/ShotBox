@@ -1,6 +1,6 @@
 .wrapper{
     display: flex;
-    background-color: #f1f1f1;
+    // background-color: #f1f1f1;
     height: 100vh;
     align-items:center;
     justify-content:space-around;
@@ -69,7 +69,7 @@
     margin-bottom: 10px;
 }
 
-.btn-signup{
+.btn-register{
     background-color: #ffc246;
     color: white;
     width: 70%;
@@ -85,7 +85,7 @@
     }
 }
 //Sign-up
-.signup-container{
+.register-container{
     position: fixed;
     background-color: rgba(150, 148, 148, 0.8);
     bottom: 0;

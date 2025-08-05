@@ -8,6 +8,7 @@ import styles from './Home.module.scss';
 import Chart from '../../components/Chart'
 import useImages from '../../hooks/useImages';
 import Slider from '../../components/Slider';
+
 const cx = classNames.bind(styles);
 
 function Home() {

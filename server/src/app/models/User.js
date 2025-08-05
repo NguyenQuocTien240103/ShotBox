@@ -1,121 +1,93 @@
-import db from '../../config/database.js';
+import { getDB } from '../../config/database.js';
 
-const User = {
-    getAllUsers: async () => {
+class User {
+    constructor() {
+        this.db = getDB();
+    }
+
+    async getAllUsers() {
         try {
             const query = 'SELECT * FROM users';
-            const [rows] = await db.query(query);
+            const [rows] = await this.db.query(query);
             return rows;
         } catch (error) {
-            console.error('Error fetching usernames:', error);
-            throw new Error('Failed to fetch usernames'); // Tùy chọn: Ném lỗi để xử lý ở tầng gọi
+            throw error;
         }
-    },
-    findByUsername: async (username) => {
+    }
+
+    async findByUsername(username) {
         try {
             const query = 'SELECT * FROM users WHERE name = ?';
-            const [rows] = await db.query(query, [username]);
-
-            if (rows.length > 0) {
-                return rows[0];
-            }
-            return null;
+            const [rows] = await this.db.query(query, [username]);
+            return rows[0] || null;
         } catch (error) {
-            console.error("Error fetching user by username:", error);
-            throw new Error("Unable to find user.");
+            throw error;
         }
-    },
-    findByEmail: async (email) => {
-        const query = 'SELECT * FROM users WHERE email = ?';
-        const [rows] = await db.query(query, [email]);
-        return rows.length > 0 ? rows[0] : null;
-    },
-    create: async (data) => {
+    }
+
+    async findByEmail(email) {
+        try {
+            const query = 'SELECT * FROM users WHERE email = ?';
+            const [rows] = await this.db.query(query, [email]);
+            return rows[0] || null;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async findById(userId) {
+        try {
+            const query = 'SELECT * FROM users WHERE id = ?';
+            const [rows] = await this.db.query(query, [userId]);
+            return rows[0] || null;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async create(data) {
         try {
             const { username, email, password } = data;
             const roleId = 2;
             const capacity = 10;
             const query = 'INSERT INTO users (name, email, password, roleId, capacity) VALUES (?, ?, ?, ?, ?)';
-            const [result] = await db.query(query, [username, email, password, roleId, capacity]);
+            const [result] = await this.db.query(query, [username, email, password, roleId, capacity]);
             return result.insertId;
         } catch (error) {
-            console.error("Error creating user:", error);
-            throw new Error("Unable to create user.");
-        }
-    },
-    findById: async (userId) => {
-        try {
-            const query = 'SELECT * FROM users WHERE id = ?';
-            const [rows] = await db.query(query, [userId]);
-            return rows.length > 0 ? rows[0] : null;
-        } catch (error) {
-            console.error("Error fetching user by ID:", error);
-            throw new Error("Unable to find user.");
-        }
-    },
-    update: async (userId, data) => {
-        try {
-            const { name, email, password, roleId } = data;
-            const query = `
-            UPDATE users 
-            SET  email = ?, password = ? WHERE id = ?
-             `;
-            const [result] = await db.query(query, [
-                email,
-                password,
-                userId
-            ]);
-
-            return result.affectedRows > 0;
-        } catch (error) {
-            console.error("Error updating user:", error);
-            throw new Error("Unable to update user.");
-        }
-    },
-    updateRoleId: async (newRoleId, userId) => {
-        try {
-            // Kiểm tra xem newRoleId và userId có hợp lệ không
-            if (!newRoleId || !userId) {
-                throw new Error('Missing newRoleId or userId');
-            }
-
-            // Truy vấn SQL để cập nhật RoleId
-            const query = 'UPDATE users SET roleId = ? WHERE id = ?';
-            const [result] = await db.query(query, [newRoleId, userId]);
-
-            // Kiểm tra xem có ảnh hưởng dòng dữ liệu nào không
-            if (result.affectedRows > 0) {
-                return { success: true, message: 'Role updated successfully' };
-            } else {
-                throw new Error('User not found or RoleId is the same');
-            }
-        } catch (error) {
-            console.error(error);
-            return { success: false, message: error.message };
-        }
-    },
-    updateCapacity: async (newCapacity, userId) => {
-        try {
-            // Kiểm tra xem newCapacity và userId có hợp lệ không
-            if (!newCapacity || !userId) {
-                throw new Error('Missing newCapacity or userId');
-            }
-            // Kiểm tra xem newCapacity có phải là một số hợp lệ không
-            if (isNaN(newCapacity) || newCapacity <= 0) {
-                throw new Error('Invalid newCapacity value');
-            }
-            const query = 'UPDATE users SET capacity = ? WHERE id = ?';
-            const [result] = await db.query(query, [newCapacity, userId]);
-            if (result.affectedRows > 0) {
-                return { success: true, message: 'Capacity updated successfully' };
-            } else {
-                throw new Error('User not found or capacity is the same');
-            }
-        } catch (error) {
-            console.error(error);
-            return { success: false, message: error.message };
+            throw error;
         }
     }
-};
+
+    async update(userId, data) {
+        try {
+            const { email, password } = data;
+            const query = 'UPDATE users SET email = ?, password = ? WHERE id = ?';
+            const [result] = await this.db.query(query, [email, password, userId]);
+            return result.affectedRows > 0;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async updateRoleId(newRoleId, userId) {
+        try {
+            const query = 'UPDATE users SET roleId = ? WHERE id = ?';
+            const [result] = await this.db.query(query, [newRoleId, userId]);
+            return result.affectedRows > 0;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async updateCapacity(newCapacity, userId) {
+        try {
+            const query = 'UPDATE users SET capacity = ? WHERE id = ?';
+            const [result] = await this.db.query(query, [newCapacity, userId]);
+            return result.affectedRows > 0;
+        } catch (error) {
+            throw error;
+        }
+    }
+}
 
 export default User;

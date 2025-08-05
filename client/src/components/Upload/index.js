@@ -6,6 +6,7 @@ import classNames from 'classnames/bind';
 import styles from './Upload.module.scss';
 import Button from '../Button';
 import * as ImageService from '../../services/imageService';
+
 const cx = classNames.bind(styles);
 
 function UpLoad({ setShowUpload }) {
@@ -13,18 +14,17 @@ function UpLoad({ setShowUpload }) {
     const [isVisible, setIsVisible] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const fileInputRef = useRef(null);
-    const displayFileNameRef = useRef('');
+    const displayFileNameRef = useRef('');  
     useEffect(() => {
         setIsVisible(true);
     }, []);
 
     const handleUpload = async () => {
         setSelectedFile(null);
-        const CLOUD_NAME = process.env.CLOUD_NAME;
-        const PRESET_NAME = process.env.PRESET_NAME;
-        const FOLDER_NAME = process.env.FOLDER_NAME;
+        const CLOUD_NAME = process.env.REACT_APP_CLOUD_NAME;
+        const PRESET_NAME = process.env.REACT_APP_PRESET_NAME;
+        const FOLDER_NAME = process.env.REACT_APP_FOLDER_NAME;
         const api = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
-
         const formData = new FormData();
         formData.append('file', selectedFile);
         formData.append('upload_preset', PRESET_NAME);

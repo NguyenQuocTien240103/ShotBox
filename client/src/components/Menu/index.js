@@ -4,10 +4,12 @@ import Button from "../Button";
 import * as AlbumImageService from '../../services/albumImageService';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-const cx = classNames.bind(styles);
-function Menu({ ImageObj, MenuItems, displayAlbums, setDisplayAlbums }) {
 
+const cx = classNames.bind(styles);
+
+function Menu({ ImageObj, MenuItems, displayAlbums, setDisplayAlbums }) {
     const current = displayAlbums.length > 0 ? displayAlbums : MenuItems;
+    
     const handleAddImgToAlbum = (e, AlbumObj, ImageObj) => {
         e.stopPropagation();
         const addImgToAblum = async () => {

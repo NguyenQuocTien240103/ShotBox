@@ -1,5 +1,5 @@
 import Main from '../pages/Main'
-import LoginSignup from '../pages/LoginSignup'
+import LoginRegister from '../pages/LoginRegister'
 import Album from '../pages/Album'
 import AlbumDetail from '../pages/AlbumDetail'
 import Home from '../pages/Home'
@@ -22,7 +22,7 @@ const routes = [
     },
     {
         path: '/login',
-        component: LoginSignup,
+        component: LoginRegister,
         layout: null,
         isPrivate: false
     },

@@ -6,8 +6,8 @@ import ImageCardList from '../../components/ImageCardList';
 import Toolbar from '../../components/Toolbar';
 import useImages from '../../hooks/useImages';
 import { useAllAlbum } from '../../hooks/useAlbum';
+
 function Images() {
-    // hooks
     const { img, setImg } = useImages();
     const { albums } = useAllAlbum();
     const [isHideAlbum, setIsHideAlbum] = useState(false);
@@ -15,7 +15,6 @@ function Images() {
     const [isDeleting, setIsDeleting] = useState(false);
     const [displayAlbums, setDisplayAlbums] = useState([])
 
-    // function handle of MenuItems
     const handleShowListAlbumName = async (obj, e) => {
         if (isDeleting) return;
         e.stopPropagation();
@@ -46,11 +45,11 @@ function Images() {
             console.error('Error downloading image:', error);
         }
     };
+
     const handleDeleteImg = async (ImageObj, e) => {
         if (isDeleting) return;
         e.stopPropagation();
         setIsDeleting(true);
-        // document.removeEventListener('mousedown', handleClickOutside);
         const idImg = ImageObj.id;
         const fetchData = async () => {
             try {
@@ -86,7 +85,6 @@ function Images() {
         }
     ];
 
-    // function handle of menuToolbar
     const handleShowAlbum = (e) => {
         setIsHideAlbum(!isHideAlbum);
     }
@@ -158,10 +156,7 @@ function Images() {
                 />
             }
             <ToastContainer />
-
         </>
-
-
     );
 }
 

@@ -12,11 +12,13 @@ ShotBox is a web application for managing and storing images using Cloudinary. T
 Before running the front-end, create a `.env` file in the root directory of the `client` folder and set the following environment variables:
 
 
-CLOUD_NAME=your-cloudinary-cloud-name
+REACT_APP_CLOUD_NAME=your-cloudinary-cloud-name
 
-PRESET_NAME=your-upload-preset-name
+REACT_APP_PRESET_NAME=your-upload-preset-name
 
-FOLDER_NAME=your-folder-name
+REACT_APP_FOLDER_NAME=your-folder-name
+
+REACT_APP_BASE_URL=your-base-url
 
 
 How to Get These Values from Cloudinary:
@@ -52,11 +54,20 @@ DATABASE_USER=root
 
 DATABASE_PASSWORD=
 
+URL_EMAIL=your-email
+
 JWT_SECRET=your-jwt-secret
 
 JWT_EXPIRE=your-jwt-expiry-time
 
 SENDGRID_API_KEY=your-sendgrid-api-key
+
+CLOUD_NAME=your-name-cloudinary
+
+API_KEY=your-cloudinary-api-key
+
+API_SECRET=your-cloudinary-api-secret
+
 
 ## Setting Up the Project
 Clone the Repository

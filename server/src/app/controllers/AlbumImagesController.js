@@ -1,58 +1,61 @@
-import AlbumImage from '../models/AlbumImage.js';
+import AlbumImages from "../models/AlbumImages.js";
 
-class AlbumImageController {
+class AlbumImagesController {
+    constructor(){
+        this.albumImages = new AlbumImages();
+    }
+
     async postImageToAlbum(req, res) {
         try {
             const { albumId, imageId } = req.body;
-            await AlbumImage.create(albumId, imageId);
-            return res.status(201).json({ message: 'Push image into ablum successfully' });
+            await this.albumImages.create(albumId, imageId);
+            return res.status(201).json({ message: "Push image into ablum successfully" });
         } catch (error) {
-            console.error('Error uploading image:', error); // Log lỗi chi tiết
-            return res.status(500).json({ message: 'Internal Server Error' });
+            console.error("Error:", error.message);
+            return res.status(500).json({ message: "Push image into album is unsuccessful" });
         }
     }
+
     async postMultipleImageToAlbum(req, res) {
         try {
             const { albumId, listImageId } = req.body;
             // Validate input data
             if (!albumId || !Array.isArray(listImageId) || listImageId.length === 0) {
-                return res.status(400).json({ message: 'Invalid input data. Please provide a valid albumId and a list of image IDs.' });
+                return res.status(400).json({ message: "Failed to push images into album" });
             }
             // Process each image ID one by one
             for (const imageId of listImageId) {
-                await AlbumImage.create(albumId, imageId);
+                await this.albumImages.create(albumId, imageId);
             }
-            return res.status(201).json({ message: 'Images added to the album successfully.' });
+            return res.status(201).json({ message: "Images added to the album successfully" });
         } catch (error) {
-            console.error('Error adding images to album:', error); // Log detailed error
-            return res.status(500).json({ message: 'An error occurred while processing your request. Please try again later.' });
+            console.error("Error:", error.message);
+            return res.status(500).json({ message: "Failed to push images into album" });
         }
     }
 
     async showImagesFromAlbum(req, res) {
         try {
-            // const urlParams = req.params.id;
             const urlParams = req.params.slug;
-            const images = await AlbumImage.getAllImagesFromAlbum(urlParams);
-            return res.status(200).json({ data: images });
+            const images = await this.albumImages.getAllImagesFromAlbum(urlParams);
+            return res.status(200).json({ data: images, message: "Successfully got images from album" });
         } catch (error) {
-            console.error("Error fetching images:", error); // Log lỗi chi tiết
-            return res.status(500).json({ error: "An error occurred while fetching images." });
+            console.error("Error:", error.message);            
+            return res.status(500).json({ message: "Fail to get images from album" });
         }
     }
+
     async deleteImageFromAlbum(req, res) {
         try {
             const albumImgId = req.params.id;
-            const affectedRows = await AlbumImage.delete(albumImgId);
+            const affectedRows = await this.albumImages.delete(albumImgId);
 
-            if (affectedRows > 0) {
-                res.status(200).json({ message: "Image deleted successfully." });
-            } else {
-                res.status(404).json({ message: "Image not found." });
-            }
+            if(!affectedRows) return res.status(404).json({ message: "Image not found" });
+
+            return res.status(200).json({ message: "Image deleted successfully" });
         } catch (error) {
-            console.error("Error deleting image:", error);
-            res.status(500).json({ message: "Failed to delete image. Please try again later." });
+            console.error("Error:", error.message);
+            res.status(500).json({ message: "Failed to delete image" });
         }
     }
 
@@ -61,22 +64,19 @@ class AlbumImageController {
             const listAlbumImgId = req.body;
             let deletedCount = 0;
             for (const albumImgId of listAlbumImgId) {
-                let affectedRows = await AlbumImage.delete(albumImgId);
+                let affectedRows = await this.albumImages.delete(albumImgId);
                 // Nếu ảnh bị xóa thành công, tăng đếm
-                if (affectedRows > 0) {
-                    deletedCount++;
-                }
+                if (affectedRows > 0) deletedCount++;
             }
-            if (deletedCount > 0) {
-                res.status(200).json({ message: `${deletedCount} image(s) deleted successfully.` });
-            } else {
-                res.status(404).json({ message: "No images found to delete." });
-            }
+            
+            if(!deletedCount) return  res.status(404).json({ message: "No images found to delete" });
+
+            return res.status(200).json({ message: "Image deleted successfully" });
         } catch (error) {
-            console.error("Error deleting images:", error);
-            res.status(500).json({ message: "Failed to delete image(s). Please try again later." });
+            console.error("Error:", error.message);
+            return res.status(500).json({ message: "Failed to delete image" });
         }
     }
 }
 
-export default new AlbumImageController();
+export default AlbumImagesController;

@@ -1,6 +1,8 @@
 import classNames from 'classnames/bind'
 import styles from './Input.module.scss'
+
 const cx = classNames.bind(styles)
+
 function Input({ className, type, placeholder, error, value, onChange, onBlur, checked, ...otherProps }) {
     const classes = cx({
         [className]: className

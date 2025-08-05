@@ -3,6 +3,7 @@ import styles from './CodeVerifyForm.module.scss';
 import { useFormik } from 'formik';
 import Input from '../../Input'
 import * as identifyService from '../../../services/identifyService.js'
+
 const cx = classNames.bind(styles);
 
 function CodeVerifyForm({ setShowCodeVerifyForm }) {
@@ -24,6 +25,7 @@ function CodeVerifyForm({ setShowCodeVerifyForm }) {
             fetchApi();
         }
     })
+
     return (<div className={cx('wrapper')}>
         <form className={cx("form")} onSubmit={formik.handleSubmit}>
             <h2 className={cx("title")}>Get code from email </h2>

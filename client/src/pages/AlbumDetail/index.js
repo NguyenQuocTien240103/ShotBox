@@ -7,14 +7,15 @@ import Button from '../../components/Button';
 import FormConfirm from '../../components/FormConfirm';
 import * as AlbumService from '../../services/albumService';
 import * as AlbumImageService from '../../services/albumImageService';
-
 import { useParams } from 'react-router-dom';
 import Header from './Header';
 import ImageCardList from '../../components/ImageCardList';
 import Toolbar from '../../components/Toolbar';
 import { useAlbumDetail } from '../../hooks/useAlbum';
 import { useImagesByAlbumId } from '../../hooks/useAlbumImage';
+
 const cx = classNames.bind(styles);
+
 function AlbumDetail() {
     const { id } = useParams();
     const { albumDetail } = useAlbumDetail(id);

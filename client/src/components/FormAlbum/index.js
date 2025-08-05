@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Input from '../Input';
 import Button from '../Button';
 import * as AlbumService from '../../services/albumService';
+
 const cx = classNames.bind(styles);
 
 function FormAlbum({ title, setShowFormAlbum, albumDetail, isUpdate }) {

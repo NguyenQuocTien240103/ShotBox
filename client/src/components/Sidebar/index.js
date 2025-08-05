@@ -4,11 +4,15 @@ import { Link } from "react-router-dom";
 import classNames from 'classnames/bind';
 import styles from './Sidebar.module.scss'
 import Button from '../Button'
+
 const cx = classNames.bind(styles)
+
 function Sidebar() {
     const roleId = useSelector((state) => state.auth.roleId);
     const [showListManager, setShowListManager] = useState(false);
     const [activeIndex, setActiveIndex] = useState(null);
+    
+    if(!roleId) return;
 
     const ListManager = [
         {

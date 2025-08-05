@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -8,13 +9,15 @@ import UserNameVerifyForm from '../../components/Verify/UserNameVerifyForm';
 import EmailVerifyForm from '../../components/Verify/EmailVerifyForm';
 import CodeVerifyForm from '../../components/Verify/CodeVerifyForm';
 import * as identifyService from '../../services/identifyService.js'
-import { useState } from "react";
+
 const cx = classNames.bind(styles);
+
 function ForgotPassword() {
     const verify = useSelector((state) => state.verify);
     const [showUserNameVerifyForm, setShowUserNameVerifyForm] = useState(true);
     const [showEmailVerifyForm, setShowEmailVerifyForm] = useState(true);
     const [showCodeVerifyForm, setShowCodeVerifyForm] = useState(true);
+    
     const validationSchema = Yup.object({
         password: Yup.string()
             .required('Required')
@@ -23,6 +26,7 @@ function ForgotPassword() {
             .oneOf([Yup.ref('password'), null], 'Passwords must match') // Validation for confirm password
             .required('Required')
     });
+    
     const formik = useFormik({
         initialValues: {
             password: '',

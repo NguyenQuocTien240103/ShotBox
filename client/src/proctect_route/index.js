@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { Navigate } from 'react-router-dom';
+
 function ProctectRoute({ children, isPrivate, adminRoute }) {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const roleId = useSelector((state) => state.auth.roleId);

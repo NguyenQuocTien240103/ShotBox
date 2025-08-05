@@ -2,7 +2,6 @@ import ImageChart from './ImageChart';
 import UserChart from './UserChart';
 import CapacityChart from './CapacityChart';
 
-
 const components = {
     ImageChart: ImageChart,
     UserChart: UserChart,

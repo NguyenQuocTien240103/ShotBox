@@ -47,7 +47,6 @@ function DeletedImages() {
         if (isDeleting) return;
         e.stopPropagation();
         setIsDeleting(true);
-        // document.removeEventListener('mousedown', handleClickOutside);
         const id = objDeletedImage.id;
         const removeImg = async () => {
             try {
@@ -129,7 +128,7 @@ function DeletedImages() {
             handleOnclick: handleDelMulitple
         }
     ];
-    ////////////////////////////////////////
+    
     const handleOnclickCheckbox = (e, deletedImage) => {
         setListIdImgChecked((pre) => {
             const isChecked = listIdImgChecked.includes(deletedImage.id);

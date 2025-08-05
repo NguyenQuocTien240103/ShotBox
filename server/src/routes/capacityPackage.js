@@ -1,15 +1,24 @@
-import express from 'express';
+import express from 'express'
 import CapacityPackageController from '../app/controllers/CapacityPackageController.js'
-import auth from "../middleware/auth.js";
-const router = express.Router();
-router.all("*", auth);
+import auth from "../middleware/auth.js"
 
-router.get('/', CapacityPackageController.showAllCapacityPackages);
+class CapacityPackageRoute {
+  constructor() {
+    this.router = express.Router();
+    this.capacityPackageController = new CapacityPackageController();
+    this.init();
+  }
 
-router.post('/', CapacityPackageController.postCapacityPackage);
+  init() {
+    this.router.get('/', auth, (req, res) => this.capacityPackageController.showAllCapacityPackages(req,res));
+    this.router.post('/', auth, (req, res) => this.capacityPackageController.postCapacityPackage(req,res));   
+    this.router.put('/:id', auth, (req, res) => this.capacityPackageController.updateCapacityPackage(req,res));    
+    this.router.delete('/:id', auth, (req, res) => this.capacityPackageController.deleteCapacityPackage(req,res));    
+  }
 
-router.put('/:id', CapacityPackageController.updateCapacityPackage);
+  getRouter() {
+    return this.router;
+  }
+}
 
-router.delete('/:id', CapacityPackageController.deleteCapacityPackage);
-
-export default router;
+export default CapacityPackageRoute;

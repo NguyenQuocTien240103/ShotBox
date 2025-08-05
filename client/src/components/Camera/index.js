@@ -2,11 +2,11 @@ import Webcam from 'react-webcam';
 import classNames from 'classnames/bind';
 import styles from './Camera.module.scss';
 import Button from '../Button';
+
 const cx = classNames.bind(styles);
+
 function Camera({ setCapturedImage }) {
-    const videoConstraints = {
-        facingMode: "user"
-    };
+    const videoConstraints = { facingMode: "user" };
     // Hàm chuyển base64 thành Blob
     const base64ToBlob = (base64, type = 'image/jpeg') => {
         const byteString = atob(base64.split(',')[1]);
@@ -17,6 +17,7 @@ function Camera({ setCapturedImage }) {
         }
         return new Blob([uint8Array], { type });
     };
+
     return (
         <div className={cx('wrapper')}>
             <Webcam

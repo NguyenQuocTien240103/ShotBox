@@ -1,30 +1,29 @@
 import express from 'express';
 import UserController from '../app/controllers/UserController.js'
 import auth from "../middleware/auth.js";
-const router = express.Router();
 
-router.get('/username', UserController.findUserByUsername);
+class UserRoute {
+  constructor() {
+    this.router = express.Router();
+    this.userController = new UserController();
+    this.init();
+  }
 
-router.all("*", auth);
+  init() {
+    this.router.get('/username', (req, res) => this.userController.findUserByUsername(req,res));
+    this.router.get('/roleId', auth, (req, res) => this.userController.getRoleId(req,res));
+    this.router.put('/roleId', auth, (req, res) => this.userController.changeRoleId(req,res));
+    this.router.put('/capacity', auth, (req, res) => this.userController.updateUserCapacity(req,res));
+    this.router.get('/account', auth, (req, res) => this.userController.getUser(req,res));
+    this.router.get('/:id', (req, res) => this.userController.getUserById(req,res));
+    this.router.get('/', (req, res) => this.userController.showAllUser(req,res));
+    this.router.put('/password', auth, (req, res) => this.userController.updateUserPassword(req,res));
+    this.router.put('/email', auth, (req, res) => this.userController.updateUserEmail(req,res));
+  }
 
-router.get('/roleId', UserController.getRoleId);
+  getRouter() {
+    return this.router;
+  }
+}
 
-// change role 
-router.put('/roleId', UserController.ChangeRoleId);
-
-router.put('/capacity', UserController.UpdateUserCapacity);
-
-router.get('/account', UserController.getUser);
-
-router.get('/:id', UserController.getUserById);
-
-router.get('/', UserController.showAllUser)
-
-router.put('/password', UserController.updateUserPassword);
-
-router.put('/email', UserController.updateUserEmail);
-
-router.delete('/:id', UserController.deleteUser);
-
-
-export default router;
+export default UserRoute;

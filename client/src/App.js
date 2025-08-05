@@ -14,6 +14,7 @@ import ProctectRoute from './proctect_route'
 function App() {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
   useEffect(() => {
     const fetchData = async () => {
       if (isAuthenticated) {
@@ -27,6 +28,7 @@ function App() {
     }
     fetchData();
   }, [dispatch, isAuthenticated]);
+  
   return (
     <Router>
       <div className="App">

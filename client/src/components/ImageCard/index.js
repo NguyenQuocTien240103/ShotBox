@@ -43,6 +43,5 @@ function ImageCard({ imgObj, isActive, isChecked, onImageClick, onOptionClick, o
     );
 };
 
-
 export default ImageCard;
 

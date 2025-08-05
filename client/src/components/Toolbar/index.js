@@ -5,7 +5,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import * as AlbumService from '../../services/albumService';
 import * as AlbumImageService from '../../services/albumImageService';
 import Button from '../../components/Button';
+
 const cx = classNames.bind(styles);
+
 function Toolbar({ isAlbumListVisible, menuToolbar, listIdImgChecked }) {
     const [listAlbum, setListAlbum] = useState([]);
     useEffect(() => {

@@ -4,7 +4,9 @@ import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import FormAlbum from '../../components/FormAlbum';
 import { useAllAlbum } from '../../hooks/useAlbum';
+
 const cx = classNames.bind(styles);
+
 function Album() {
     const { albums } = useAllAlbum();
     const [showformAlbum, setShowFormAlbum] = useState(false);

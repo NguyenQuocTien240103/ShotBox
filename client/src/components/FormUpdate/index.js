@@ -6,7 +6,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useAllCapacityPackage } from '../../hooks/useCapacity';
 import { useHistoryUpgradePending } from '../../hooks/useHistoryUpgrade';
 import * as userService from '../../services/userService';
+
 const cx = classNames.bind(styles);
+
 function FormUpdate({ setShowFormUpdate, checkRoleId, userId }) {
 
     const listCapacityPending = [];
@@ -16,9 +18,9 @@ function FormUpdate({ setShowFormUpdate, checkRoleId, userId }) {
     const { upgradePending } = useHistoryUpgradePending(userId);
     const [isSaving, setIsSaving] = useState(false);
 
-    upgradePending.map((item) => {
+    upgradePending.forEach((item) => {
         listCapacityPending.push(item.size);
-    })
+    });    
 
     const updateRoleIdData = async (data) => {
         try {

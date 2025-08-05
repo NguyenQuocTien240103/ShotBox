@@ -7,7 +7,9 @@ import Button from '../Button';
 import UpLoad from '../Upload';
 import { authLogout } from '../../redux/actions/auth';
 import * as userService from '../../services/userService.js';
+
 const cx = classnames.bind(styles);
+
 function NavBar({ mainLayout, defaultLayout, children }) {
     const dispatch = useDispatch();
     const menuRef = useRef(null);

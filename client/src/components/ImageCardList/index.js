@@ -10,15 +10,22 @@ function ImageCardList({ images, displayAlbums, setDisplayAlbums, menuItems, isD
     const [selectedImage, setSelectedImage] = useState(null);
     const [isImageClicked, setIsImageClicked] = useState(false);
     const menuRef = useRef(null);
-    // handle when we mousedown
+
     useEffect(() => {
         if (activeIndex !== null) {
+            const handleClickOutside = (e) => {
+                if (menuRef.current && !menuRef.current.contains(e.target)) {
+                    setActiveIndex(null);
+                    setDisplayAlbums([]);
+                }
+            };
             document.addEventListener('mousedown', handleClickOutside);
+            return () => {
+                document.removeEventListener('mousedown', handleClickOutside);
+            };
         }
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [activeIndex]);
+    }, [activeIndex, setDisplayAlbums]);
+    
 
     const handleCloseImage = () => {
         setSelectedImage(null);
@@ -37,12 +44,7 @@ function ImageCardList({ images, displayAlbums, setDisplayAlbums, menuItems, isD
         if (isDeleting) return;
         setActiveIndex(activeIndex === index ? null : index);
     };
-    const handleClickOutside = (e) => {
-        if (menuRef.current && !menuRef.current.contains(e.target)) {
-            setActiveIndex(null);
-            setDisplayAlbums([]);
-        }
-    };
+ 
     // Các hàm handleDownloadImg, handleDeleteImg, handleShowListAlbumName sẽ được định nghĩa tương tự như trong component Images ban đầu
     return (
         <div className={cx('image-list')}>

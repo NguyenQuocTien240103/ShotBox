@@ -1,4 +1,5 @@
 import ChartType from "./ChartType";
+
 function CapacityChart({ items }) {
     return (
         <div>

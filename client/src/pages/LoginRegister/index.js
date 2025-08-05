@@ -7,14 +7,17 @@ import classNames from "classnames/bind";
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css'; // option
 import 'tippy.js/themes/light.css';
-import styles from './LoginSignup.module.scss'
-import Input from "../Input";
-import Signup from '../Signup';
-import * as loginService from '../../services/loginService'
+import styles from './LoginRegister.module.scss'
+import Input from '../../components/Input';
+import FormRegister from '../../components/FormRegister';
 import { authLogin } from '../../redux/actions/auth'
+import * as authService from '../../services/authService'
+
 const cx = classNames.bind(styles)
-function LoginSigup() {
-    const [showFormSignup, setShowFormSignup] = useState(false);
+
+function LoginRegister() {
+    const [showFormRegister, setShowFormRegister] = useState(false);
+    const [errorLogin, setErrorLogin] = useState("");
     const dispatch = useDispatch();
 
     const validationSchema = Yup.object({
@@ -35,20 +38,14 @@ function LoginSigup() {
         onSubmit: (value) => {
             const fetchApi = async () => {
                 try {
-                    const res = await loginService.login(value);
+                    const res = await authService.login(value);
+
                     if (res) {
                         dispatch(authLogin(res));
                     }
                 }
                 catch (error) {
-                    console.log(error.response.data);
-                    const data = error.response.data;
-                    if (data.field === 'username') {
-                        formik.setFieldError(data.field, data.error);
-                    }
-                    else {
-                        formik.setFieldError(data.field, data.error);
-                    }
+                    setErrorLogin(error.response.data.message);
                 }
             }
             fetchApi();
@@ -56,16 +53,18 @@ function LoginSigup() {
     })
 
     const handleOnclick = (e) => {
-        setShowFormSignup(true)
+        setShowFormRegister(true)
     }
 
     return (<div className={cx('wrapper')}>
 
         <div className="block__intro">
-            <div className="block__messege">  <h1 style={{ color: 'black' }}>WELCOME TO WEBSITE</h1></div>
+            <div className="block__messege">  
+                <h1 style={{ color: 'white', textAlign: 'center' }}>WELCOME TO WEBSITE SHOTBOX</h1>
+            </div>
             <div className={cx('block__description')}>
-                <h1 style={{ color: 'white' }}>
-                    SHOTBOX
+                <h1 style={{ color: 'black' }}>
+                    Your memories, captured and secured — all in one place with ShotBox
                 </h1>
             </div>
         </div>
@@ -74,6 +73,9 @@ function LoginSigup() {
             <form className={cx("login")} onSubmit={formik.handleSubmit}>
 
                 <h2 className={cx("login-title")}>LOG IN</h2>
+                {errorLogin &&
+                    <p style={{ color: 'red' }}>{errorLogin}</p>
+                }
                 <div className={cx('group-control')}>
                     <Input className={cx("login-control")}
                         id="username"
@@ -116,15 +118,15 @@ function LoginSigup() {
                     <Link to="./identify">Forgot password?</Link>
                 </div>
 
-                <button className={cx("btn-signup")} type='button' onClick={handleOnclick}>Create new account</button>
+                <button className={cx("btn-register")} type='button' onClick={handleOnclick}>Create new account</button>
             </form>
         </div>
 
-        {showFormSignup &&
-            <Signup setShowFormSignup={setShowFormSignup} />
+        {showFormRegister &&
+            <FormRegister setShowFormRegister={setShowFormRegister} />
         }
 
     </div>);
 }
 
-export default LoginSigup;
+export default LoginRegister;

@@ -5,7 +5,9 @@ import Table from '../../Table';
 import Button from '../../Button';
 import Input from "../../Input";
 import * as historyUpgradeService from '../../../services/historyUpgrade';
+
 const cx = classNames.bind(styles);
+
 function HistoryUpgradeManager() {
     const [currentItems, setCurrentItems] = useState([]);
     const [fullItems, setFullItems] = useState([]);
@@ -94,4 +96,5 @@ function HistoryUpgradeManager() {
         <Table currentItems={currentItems} columns={columns} />
     </div>);
 }
+
 export default HistoryUpgradeManager;

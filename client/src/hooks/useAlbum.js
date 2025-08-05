@@ -19,6 +19,7 @@ export const useAllAlbum = () => {
 
     return { albums, setAlbums };
 };
+
 export const useAlbumDetail = (id) => {
     const [albumDetail, setAlbumDetail] = useState(null);
 

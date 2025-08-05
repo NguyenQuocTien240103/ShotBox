@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import * as capacityPackageService from '../services/capacityPackageService';
+
 export const useAllCapacityPackage = () => {
     const [capacityPackages, setCapacityPackages] = useState([]);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -13,5 +15,6 @@ export const useAllCapacityPackage = () => {
         }
         fetchData();
     }, []);
+    
     return { capacityPackages, setCapacityPackages }
 };

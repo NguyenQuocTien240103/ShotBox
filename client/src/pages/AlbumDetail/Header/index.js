@@ -3,6 +3,7 @@ import classNames from "classnames/bind";
 import styles from './Header.module.scss';
 import FormAlbum from '../../../components/FormAlbum';
 import dayjs from 'dayjs';
+
 const cx = classNames.bind(styles)
 
 function Header({ setShowFormConfirm, album }) {

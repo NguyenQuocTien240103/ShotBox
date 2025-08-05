@@ -6,7 +6,9 @@ import styles from './UserNameVerifyForm.module.scss';
 import Input from '../../Input'
 import { verifyUserName, verifyEmail } from '../../../redux/actions/verify'
 import * as userService from '../../../services/userService.js'
+
 const cx = classNames.bind(styles);
+
 function UserNameVerifyForm({ setShowUserNameVerifyForm }) {
     const dispatch = useDispatch();
 
@@ -35,6 +37,7 @@ function UserNameVerifyForm({ setShowUserNameVerifyForm }) {
             fetchApi();
         }
     })
+    
     return (<div className={cx('wrapper')}>
         <form className={cx("form")} onSubmit={formik.handleSubmit}>
             <i className={`fa-sharp fa-solid fa-arrow-left ${cx('icon-modifier')}`} onClick={() => {

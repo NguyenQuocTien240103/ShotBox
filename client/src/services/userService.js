@@ -5,7 +5,6 @@ export const getAllUsers = async () => {
         const res = await request.get('/user');
         return res;
     } catch (error) {
-        console.log(error);
         throw error;
     }
 }
@@ -16,7 +15,6 @@ export const getUser = async () => {
         const res = await request.get('/user/account');
         return res;
     } catch (error) {
-        console.log(error);
         throw error;
     }
 }
@@ -26,7 +24,6 @@ export const getRoleId = async () => {
         const res = await request.get('/user/roleId');
         return res;
     } catch (error) {
-        console.log(error);
         throw error;
     }
 }
@@ -40,7 +37,6 @@ export const getUserByUsername = async (username) => {
         });
         return res;
     } catch (error) {
-        console.log(error);
         throw error;
     }
 }
@@ -50,7 +46,6 @@ export const updateRoleId = async (value) => {
         const res = await request.put(`/user/roleId`, value);
         return res;
     } catch (error) {
-        console.log(error);
         throw error;
     }
 }
@@ -60,7 +55,6 @@ export const updateUserCapacity = async (value) => {
         const res = await request.put(`/user/capacity`, value);
         return res;
     } catch (error) {
-        console.log(error);
         throw error;
     }
 }
@@ -70,7 +64,6 @@ export const updatePassword = async (value) => {
         const res = await request.put(`/user/password`, value);
         return res;
     } catch (error) {
-        console.log(error);
         throw error;
     }
 }
@@ -80,7 +73,6 @@ export const updateEmail = async (value) => {
         const res = await request.put(`/user/email`, value);
         return res;
     } catch (error) {
-        console.log(error);
         throw error;
     }
 }

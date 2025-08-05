@@ -1,25 +1,24 @@
-// cấu hình các router chính
-import loginRouter from './login.js';
-import registerRouter from './register.js';
-import imagesRouter from './images.js'
-import userRouter from './user.js'
-import albumRouter from './album.js'
-import albumImagesRouter from './albumImages.js'
-import deletedImagesRouter from './deletedImages.js'
-import identifyRouter from './identify.js'
-import capacityPackage from './capacityPackage.js'
-import historyUpgrade from './historyUpgrade.js'
+import AuthRoute from './auth.js'
+import UserRoute from './user.js';
+import ImagesRoute from './images.js';
+import DeleteImagesRoute from './deletedImages.js';
+import AlbumRoute from './album.js';
+import AlbumImagesRoute from './albumImages.js';
+import HistoryUpgradeRoute from './historyUpgrade.js'
+import CapacityPackageRoute from './capacityPackage.js';
+import IdentifyRoute from './identify.js';
+
 function routes(app) {
-    app.use('/login', loginRouter);
-    app.use('/register', registerRouter);
-    app.use('/images', imagesRouter);
-    app.use('/user', userRouter)
-    app.use('/album', albumRouter)
-    app.use('/album/images', albumImagesRouter)
-    app.use('/deleted/images', deletedImagesRouter)
-    app.use('/identify', identifyRouter);
-    app.use('/package/capacity', capacityPackage)
-    app.use('/history', historyUpgrade);
+    // refactor
+    app.use('/auth', new AuthRoute().getRouter());
+    app.use('/user', new UserRoute().getRouter());
+    app.use('/images', new ImagesRoute().getRouter());
+    app.use('/deleted/images',  new DeleteImagesRoute().getRouter());
+    app.use('/album', new AlbumRoute().getRouter());
+    app.use('/album/images',  new AlbumImagesRoute().getRouter());
+    app.use('/history', new HistoryUpgradeRoute().getRouter());
+    app.use('/package/capacity', new CapacityPackageRoute().getRouter());
+    app.use('/identify', new IdentifyRoute().getRouter());
 }
 
 export default routes;

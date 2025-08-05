@@ -1,19 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './User.module.scss';
 import UserManager from '../../../components/Manager/UserManager';
 import Button from '../../../components/Button';
 import Chart from '../../../components/Chart'
-import * as historyUpgradeService from '../../../services/historyUpgrade';
 import { useAllUser } from '../../../hooks/useUser';
 import { useAllHistoryUpgradePending } from '../../../hooks/useHistoryUpgrade';
 
 const cx = classNames.bind(styles);
+
 function User() {
     const { users, setUsers, allUser } = useAllUser();
     const [isOpen, setIsOpen] = useState(false);
     const { allUpgradePending } = useAllHistoryUpgradePending();
     const toggleDropdown = () => setIsOpen((prev) => !prev);
+
     return (
         <div className={cx('wrapper')}>
             <Chart type={'UserChart'} items={users} />

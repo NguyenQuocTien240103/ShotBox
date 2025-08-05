@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import classNames from "classnames/bind";
 import styles from './UserManager.module.scss'
@@ -6,10 +6,10 @@ import Table from '../../Table';
 import FormUpdate from "../../FormUpdate";
 import Input from "../../Input";
 import Button from "../../Button"
+
 const cx = classNames.bind(styles)
 
 function UserManager({ itemsPerPage, items, setItems, fullItems }) {
-
     const [itemOffset, setItemOffset] = useState(0);
     const [showFormUpdate, setShowFormUpdate] = useState(false);
     const [userId, setUserId] = useState(null);
@@ -112,4 +112,5 @@ function UserManager({ itemsPerPage, items, setItems, fullItems }) {
         </>
     );
 }
+
 export default UserManager;

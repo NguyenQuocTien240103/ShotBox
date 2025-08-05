@@ -1,20 +1,25 @@
 import express from 'express';
 import AlbumImagesController from '../app/controllers/AlbumImagesController.js'
 import auth from "../middleware/auth.js";
-const router = express.Router();
-router.all("*", auth);
 
-router.get('/:slug', AlbumImagesController.showImagesFromAlbum);
+class AlbumImagesRoute {
+  constructor() {
+    this.router = express.Router();
+    this.albumImagesController = new AlbumImagesController();
+    this.init();
+  }
 
-router.post('/', AlbumImagesController.postImageToAlbum);
+  init() {
+    this.router.get('/:slug', auth, (req, res) => this.albumImagesController.showImagesFromAlbum(req,res));
+    this.router.post('/', auth, (req, res) => this.albumImagesController.postImageToAlbum(req,res));
+    this.router.post('/multiple', auth, (req, res) => this.albumImagesController.postMultipleImageToAlbum(req,res));
+    this.router.post('/delete/multiple', auth, (req, res) => this.albumImagesController.deleteMultipleImageFromAlbum(req,res));
+    this.router.delete('/:id', auth, (req, res) => this.albumImagesController.deleteImageFromAlbum(req,res));
+  }
 
-router.post('/multiple', AlbumImagesController.postMultipleImageToAlbum);
+  getRouter() {
+    return this.router;
+  }
+}
 
-router.post('/delete/multiple', AlbumImagesController.deleteMultipleImageFromAlbum);
-
-
-router.delete('/:id', AlbumImagesController.deleteImageFromAlbum);
-
-
-
-export default router;
+export default AlbumImagesRoute;
