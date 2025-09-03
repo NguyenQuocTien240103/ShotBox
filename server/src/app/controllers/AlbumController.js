@@ -22,6 +22,7 @@ class AlbumController {
         try {
             const urlParams = req.params.id;
             const albums = await this.albumModel.findAlbumByUrlParams(urlParams);
+            if (!albums) return res.status(404).json({ message: "Album not found" });
             return res.status(200).json({ data: albums, message: "Successfully got album details" });
         } catch (error) {
             console.error("Error:", error.message);
@@ -50,6 +51,10 @@ class AlbumController {
         try {
             const { id } = req.user;
             const albumId = req.params.id;
+            const album = await this.albumModel.getAlbumDetail(albumId);
+
+            if (!album) return res.status(404).json({ message: "Album not found" });
+
             const { albumName, description } = req.body;
             const isDuplicate = await this.albumModel.checkDuplicateAlbumName(albumId, albumName, id);
 
@@ -67,8 +72,12 @@ class AlbumController {
     }
 
     async deleteAlbum(req, res) {
-        const id = req.params.id;
         try {
+            const id = req.params.id;
+            const album = await this.albumModel.getAlbumDetail(id);
+
+            if (!album) return res.status(404).json({ message: "Album not found" });
+
             const idAlbumExists = await this.albumImagesModel.findByIdAlbum(id);
 
             if (idAlbumExists) await this.albumImagesModel.deleteByAlbumId(id);

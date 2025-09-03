@@ -1,6 +1,7 @@
 import express from 'express';
 import IdentifyController from '../app/controllers/IdentifyController.js'
-
+import userValidationSchemas from '../app/validation/userValidation.js';
+import validate from '../middleware/validation.js';
 class IdentifyRoute {
   constructor() {
     this.router = express.Router();
@@ -10,7 +11,7 @@ class IdentifyRoute {
 
   init() {
     this.router.get('/:id', (req, res) => this.identifyController.findIdentify(req,res));
-    this.router.put('/', (req,res) => this.identifyController.confirmNewPassword(req,res));
+    this.router.put('/', validate(userValidationSchemas.userResetPassword), (req,res) => this.identifyController.confirmNewPassword(req,res));
   }
 
   getRouter() {

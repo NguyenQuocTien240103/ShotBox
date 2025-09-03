@@ -56,6 +56,7 @@ function User() {
             const data = {
                 currentPassword: values.current_password,
                 newPassword: values.new_password,
+                passwordConfirmation: values.password_confirmation,
             }
             const fetchApi = async () => {
                 try {

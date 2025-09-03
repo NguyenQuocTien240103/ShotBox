@@ -19,8 +19,8 @@ class DeletedImagesController {
     }
 
     async restoreDeletedImages(req, res) {
-        const id = req.params.id;
         try {
+            const id = req.params.id;
             // step1: get and check exist deletedImage 
             const dataDeletedImage = await this.deletedImagesModel.getDeletedImageById(id);
             
@@ -80,8 +80,8 @@ class DeletedImagesController {
     }
 
     async removeDeletedImages(req, res) {
-        const id = req.params.id;
         try {
+            const id = req.params.id;
             const affectedRows = await this.deletedImagesModel.deleteById(id);
 
             if (affectedRows === 0) return res.status(404).json({ message: "Deleted image not found" });

@@ -23,10 +23,7 @@ class ImagesController {
     async postImages(req, res) {
         try {
             const { url } = req.body;
-            const { id } = req.user;
-
-            if (!url) return res.status(400).json({ message: "Image URL is required." });
-            
+            const { id } = req.user;            
             await this.imagesModel.create(url, id);
             return res.status(201).json({ message: "Image created successfully" });
         } catch (error) {            
@@ -38,24 +35,20 @@ class ImagesController {
     async deleteImages(req, res) {
         try {
             const imgId = req.params.id;
-
             const image = await this.imagesModel.getImage(imgId);
-            if (!image || image.length === 0) {
-                return res.status(404).json({ message: "Image not found" });
-            }
+
+            if (!image || image.length === 0) return res.status(404).json({ message: "Image not found" });
 
             await this.deletedImagesModel.create(image);
             await this.albumImagesModel.deleteByImgId(imgId);
             const affectedRows = await this.imagesModel.delete(imgId);
 
-            if (affectedRows > 0) {
-                res.status(200).json({ message: "Image deleted successfully" });
-            } else {
-                res.status(404).json({ message: "Image not found" });
-            }
+            if(!affectedRows) res.status(404).json({ message: "Image not found" });
+
+            return res.status(200).json({ message: "Image deleted successfully" });
         } catch (error) {
             console.error("Error:", error.message);
-            res.status(500).json({ message: "Failed to delete image" });
+            return res.status(500).json({ message: "Failed to delete image" });
         }
     }
 
@@ -90,10 +83,10 @@ class ImagesController {
                 });
             }
 
-            res.status(200).json({ message: "All images deleted successfully", deletedImages });
+            return res.status(200).json({ message: "All images deleted successfully", deletedImages });
         } catch (error) {
             console.error("Error:", error.message);
-            res.status(500).json({ message: "Failed to delete images" });
+            return res.status(500).json({ message: "Failed to delete images" });
         }
     }
 }

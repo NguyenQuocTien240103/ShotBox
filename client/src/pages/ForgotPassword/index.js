@@ -35,6 +35,7 @@ function ForgotPassword() {
         validationSchema: validationSchema,
         onSubmit: (value) => {
             const newPassword = value.password;
+            const passwordConfirmation = value.password_confirmation;
             const email = verify.email;
             const username = verify.userName;
 
@@ -44,6 +45,7 @@ function ForgotPassword() {
                         username: username,
                         email: email,
                         newPassword: newPassword,
+                        passwordConfirmation: passwordConfirmation
                     })
                     alert(res.message);
                     window.location.href = "../login";

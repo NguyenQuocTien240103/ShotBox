@@ -15,6 +15,17 @@ class Album {
         }
     }
 
+    async getAlbumDetail(albumId) {
+        try{
+            const query = 'SELECT * FROM album WHERE id = ?';
+            const [rows] = this.db.query(query, [albumId]);
+            return rows[0];
+        }
+        catch(error){
+            throw error;
+        }
+    }
+
     async findAlbumByUrlParams(urlParams) {
         try {
             const query = 'SELECT * FROM album WHERE location = ?';

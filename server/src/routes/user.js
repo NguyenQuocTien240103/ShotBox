@@ -1,7 +1,8 @@
 import express from 'express';
 import UserController from '../app/controllers/UserController.js'
 import auth from "../middleware/auth.js";
-
+import validate from '../middleware/validation.js';
+import userValidationSchemas from '../app/validation/userValidation.js';
 class UserRoute {
   constructor() {
     this.router = express.Router();
@@ -17,8 +18,8 @@ class UserRoute {
     this.router.get('/account', auth, (req, res) => this.userController.getUser(req,res));
     this.router.get('/:id', (req, res) => this.userController.getUserById(req,res));
     this.router.get('/', (req, res) => this.userController.showAllUser(req,res));
-    this.router.put('/password', auth, (req, res) => this.userController.updateUserPassword(req,res));
-    this.router.put('/email', auth, (req, res) => this.userController.updateUserEmail(req,res));
+    this.router.put('/password', validate(userValidationSchemas.userUpdatePassword), auth, (req, res) => this.userController.updateUserPassword(req,res));
+    this.router.put('/email', validate(userValidationSchemas.userUpdateEmail), auth, (req, res) => this.userController.updateUserEmail(req,res));
   }
 
   getRouter() {
