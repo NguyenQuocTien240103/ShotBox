@@ -16,7 +16,6 @@ function UserManager({ itemsPerPage, items, setItems, fullItems }) {
     const [capacity, setCapacity] = useState(null);
     const [checkRoleId, setCheckRoleId] = useState(null);
     const [valueInput, setValueInput] = useState('');
-
     const endOffset = itemOffset + itemsPerPage;
     const currentItems = items.slice(itemOffset, endOffset);
     const pageCount = Math.ceil(items.length / itemsPerPage);

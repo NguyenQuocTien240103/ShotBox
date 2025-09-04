@@ -29,7 +29,7 @@ class UserController{
 
             if (!userExists) return res.status(404).json({ message: "User not found" });
 
-            res.status(200).json({ message: "Get user is successful", id: userExists.id, name: userExists.name, email: userExists.email, capacity: userExists.capacity }); 
+            res.status(200).json({ message: "Get user is successful", id: userExists.id, name: userExists.name, email: userExists.email, capacity: userExists.capacity, roleId: userExists.roleId  }); 
         } catch (error) {
             console.error("Error:", error.message);
             res.status(500).json({ message: "Get user is fail" });

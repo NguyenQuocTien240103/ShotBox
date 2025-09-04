@@ -12,7 +12,7 @@ export const useHistoryUpgradePending = (userId) => {
             } catch (error) {
                 console.log(error);
             }
-        };
+        }; 
     
         if (userId) fetchData();
 

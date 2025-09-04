@@ -1,8 +1,13 @@
 import * as request from '../utils/request'
 
-export const getAllUsers = async () => {
+export const getAllUsers = async (page,limit) => {
     try {
-        const res = await request.get('/user');
+        const res = await request.get('/user',{
+            params: {
+                page,
+                limit,
+            }
+        });
         return res;
     } catch (error) {
         throw error;

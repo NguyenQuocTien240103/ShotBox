@@ -1,12 +1,13 @@
 import DeletedImages from '../models/DeletedImages.js';
 import Images from '../models/Images.js';
-
+import extractPublicId from '../../utils/extractUtils.js';
+import cloudinary from '../../config/cloudinary.js';
 class DeletedImagesController {
     constructor(){
         this.deletedImagesModel = new DeletedImages();
         this.imagesModel = new Images();
     }
-
+ 
     async showAllDeletedImages(req, res) {
         try {
             const { id } = req.user; 
@@ -82,6 +83,25 @@ class DeletedImagesController {
     async removeDeletedImages(req, res) {
         try {
             const id = req.params.id;
+            const deletedImage = await this.deletedImagesModel.getDeletedImageById(id);
+
+            if (!deletedImage) return res.status(404).json({ message: "Deleted image not found" });
+            
+            const { url } = deletedImage;
+
+            const publicId = extractPublicId(url);
+            
+            if (!publicId) return res.status(400).json({ message: "Invalid image URL" });
+            
+            const result = await cloudinary.api.delete_resources(
+                [publicId],
+                { type: 'upload', resource_type: 'image', invalidate: true }
+            );
+
+            if ( result.deleted[publicId] !== 'deleted' && result.deleted[publicId] !== 'not_found' ) {
+                return res.status(500).json({ message: "Failed to delete image from Cloudinary" });
+            }
+
             const affectedRows = await this.deletedImagesModel.deleteById(id);
 
             if (affectedRows === 0) return res.status(404).json({ message: "Deleted image not found" });
@@ -95,29 +115,44 @@ class DeletedImagesController {
 
     async removeMultipleDeletedImages(req, res) {
         const listIdDeletedImage = req.body;
+
         if (!Array.isArray(listIdDeletedImage) || listIdDeletedImage.length === 0) {
             return res.status(400).json({ message: "Invalid input. Please provide an array of image IDs" });
         }
+        
         let successCount = 0;
         let failedIds = [];
+        let urls = [];
         try {
             for (const idDeletedImage of listIdDeletedImage) {
                 try {
+                    const deletedImage = await this.deletedImagesModel.getDeletedImageById(idDeletedImage);
+
+                    if (!deletedImage) continue; 
+                    
                     const affectedRows = await this.deletedImagesModel.deleteById(idDeletedImage);
 
-                    if (affectedRows > 0) {
-                        successCount++;
-                    } else {
+                    if(affectedRows === 0){
                         failedIds.push(idDeletedImage);
-                    }
+                        continue;   
+                    } 
 
+                    urls.push(deletedImage.url);
+                    successCount++;                    
                 } catch (error) {
                     console.error(`Error deleting image with ID ${idDeletedImage}:`, error);
                     failedIds.push(idDeletedImage);
                 }
             }
+            const publicIds = urls.map((url) => extractPublicId(url));
+            await cloudinary.api.delete_resources(
+                publicIds, { type: 'upload', resource_type: 'image', invalidate: true }
+            );
             return res.status(200).json({
-                message: `${successCount} Image deletion process completed.`,
+                message: failedIds.length === 0
+                    ? `${successCount} images deleted successfully.`
+                    : `${successCount} images deleted successfully, ${failedIds.length} failed.`,
+                successCount,
                 failedCount: failedIds.length,
                 failedIds,
             });
